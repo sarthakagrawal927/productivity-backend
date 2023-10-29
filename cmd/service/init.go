@@ -11,6 +11,7 @@ import (
 
 func CreateService() {
 	e := echo.New()
+	e.Use(middleware.CORS())
 
 	e.Logger.SetLevel(1)
 	logger, _ := zap.NewProduction()
@@ -25,7 +26,6 @@ func CreateService() {
 				zap.String("URI", v.URI),
 				zap.Int("status", v.Status),
 			)
-
 			return nil
 		},
 	}))
@@ -48,6 +48,7 @@ func CreateService() {
 	e.POST("/api/admin/db_migrate", migrateDB)
 	e.POST("/api/admin/db_delete_all", deleteAllTasks)
 	e.GET("/api/admin/metrics", s.Handle)
+	e.POST("/api/admin/db_seed", seedTasks)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }

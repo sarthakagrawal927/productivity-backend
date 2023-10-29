@@ -33,6 +33,7 @@ func validateAndSanitizeCreateTodo(c echo.Context) (models.Task, error) {
 		task.Status = status
 	}
 
+	task.Desc = c.FormValue("desc")
 	return task, nil
 }
 
