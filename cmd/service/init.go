@@ -42,9 +42,12 @@ func CreateService() {
 
 	e.POST("/api/todo", CreateTodo)
 	e.GET("/api/todo", GetTodo)
+	e.DELETE("/api/todo", DeleteTodo)
+	e.PATCH("/api/todo", UpdateTodo)
 
 	e.POST("/api/admin/db_migrate", migrateDB)
 	e.POST("/api/admin/db_delete_all", deleteAllTasks)
+	e.GET("/api/admin/metrics", s.Handle)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }

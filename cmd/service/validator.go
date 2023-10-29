@@ -62,3 +62,54 @@ func validateAndGetStatus(status string) (int, error) {
 
 	return sanitizedStatus, nil
 }
+
+func validateAndGetId(id string) (uint, error) {
+	var sanitizedId int
+
+	if id == "" {
+		return uint(sanitizedId), errors.New("id is required")
+	}
+
+	sanitizedId, err := (strconv.Atoi(id))
+	if err != nil {
+		return uint(sanitizedId), errors.New("id should be number")
+	}
+
+	return uint(sanitizedId), nil
+}
+
+func validateAndSanitizeUpdateTodoByID(c echo.Context) (uint, error) {
+	var sanitizedID uint
+
+	id, err := validateAndGetId(c.FormValue("id"))
+	if err != nil {
+		return sanitizedID, err
+	}
+
+	updateObj := make(map[string]interface{})
+
+	if c.FormValue("title") != "" {
+		updateObj["title"] = c.FormValue("title")
+	}
+	if c.FormValue("desc") != "" {
+		updateObj["desc"] = c.FormValue("desc")
+	}
+
+	status := c.FormValue("status")
+
+	if status != "" {
+		status, err := validateAndGetStatus(status)
+		if err != nil {
+			return sanitizedID, err
+		}
+		updateObj["status"] = status
+	}
+
+	if len(updateObj) == 0 {
+		return sanitizedID, errors.New("no update field")
+	} else {
+		c.Set("updateObj", updateObj)
+	}
+
+	return id, nil
+}

@@ -9,4 +9,5 @@ type Task struct {
 	Status   int    `json:"status"`
 	DueDate  string `json:"due_date"`
 	Priority int    `json:"priority"`
+	// TODO: Consider adding another status to soft delete, currently hard deleting
 }
