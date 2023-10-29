@@ -9,13 +9,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type postgresStruct struct {
-	connAttempts int
-	connTimeout  time.Duration
-
-	db *gorm.DB
-}
-
 const dsn = "host=localhost user=postgres password=1234567890 dbname=moves_dev port=5432 sslmode=disable TimeZone=Asia/Shanghai"
 
 func getNewPostgresDB(url string) (*postgresStruct, error) {
@@ -27,7 +20,9 @@ func getNewPostgresDB(url string) (*postgresStruct, error) {
 	var err error
 
 	for pg.connAttempts > 0 {
-		pg.db, err = gorm.Open(postgres.Open(url), &gorm.Config{})
+		pg.db, err = gorm.Open(postgres.Open(url), &gorm.Config{
+			Logger: queryLogger,
+		})
 		if err == nil {
 			break
 		}
