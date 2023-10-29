@@ -1,13 +1,15 @@
-package main
+package service
 
 import (
 	"net/http"
 
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo"
 )
 
-func main() {
+func CreateService() {
 	e := echo.New()
+
+	e.Logger.SetLevel(1)
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
@@ -17,6 +19,10 @@ func main() {
 			"message": "Hello, World!",
 		})
 	})
+
+	e.POST("/api/todo", CreateTodo)
+	e.GET("/api/todo", GetTodo)
+	e.POST("/api/admin/db_migrate", migrateDB)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }
