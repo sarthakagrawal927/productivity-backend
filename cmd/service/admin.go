@@ -1,7 +1,6 @@
 package service
 
 import (
-	"todo/pkg/constants"
 	db "todo/pkg/database"
 	"todo/pkg/models"
 
@@ -28,16 +27,12 @@ func deleteAllTasks(c echo.Context) error {
 
 func seedTasks(c echo.Context) error {
 	tasks := []models.Task{
-		{Title: "Task 1", Status: int(constants.Backlog)},
-		{Title: "Task 2", Status: int(constants.Todo)},
-		{Title: "Task 3", Status: int(constants.Done)},
-		{Title: "Task 4", Status: int(constants.Done)},
-		{Title: "Task 5", Status: int(constants.InProgress)},
-		{Title: "Task 6", Status: int(constants.InProgress)},
-		{Title: "Task 7", Status: int(constants.InProgress)},
-		{Title: "Task 8", Status: int(constants.Todo)},
-		{Title: "Task 9", Status: int(constants.InProgress)},
-		{Title: "Task 10", Status: int(constants.Backlog)},
+		{
+			Meta: models.Meta{
+				Title: "Task 1",
+				Desc:  "Task 1 Desc",
+			},
+		},
 	}
 
 	transactionResult := db.DB_CONNECTION.GetDB().Create(&tasks)
