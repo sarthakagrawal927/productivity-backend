@@ -55,7 +55,6 @@ func DeleteTodo(c echo.Context) error {
 
 func UpdateTodo(c echo.Context) error {
 	id, err := validateAndSanitizeUpdateTodoByID(c)
-
 	if err != nil {
 		return c.String(400, err.Error())
 	}
