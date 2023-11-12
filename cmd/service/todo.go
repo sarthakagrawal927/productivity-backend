@@ -1,23 +1,18 @@
 package service
 
 import (
-	"net/http"
 	db "todo/pkg/database"
+	validators "todo/pkg/middlewares"
 	"todo/pkg/models"
 
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 )
 
-type RequestResponse struct {
-	Message string      `json:"message"`
-	Data    interface{} `json:"data"`
-}
-
 func CreateTodo(c echo.Context) error {
 	task := c.Get("task").(models.Task)
 	queryResult := db.DB_CONNECTION.GetDB().Create(&task)
-	return handleQueryResult(queryResult, c, RequestResponse{Message: "Created Successfully", Data: task})
+	return validators.HandleQueryResult(queryResult, c, validators.RequestResponse{Message: "Created Successfully", Data: task})
 }
 
 func GetTodo(c echo.Context) error {
@@ -29,28 +24,18 @@ func GetTodo(c echo.Context) error {
 	} else {
 		queryResult = db.DB_CONNECTION.GetDB().Where("status = ?", status).Find(&tasks)
 	}
-	return handleQueryResult(queryResult, c, RequestResponse{Message: "Success", Data: tasks})
+	return validators.HandleQueryResult(queryResult, c, validators.RequestResponse{Message: "Success", Data: tasks})
 }
 
 func DeleteTodo(c echo.Context) error {
 	var task models.Task
 	id := c.Get("id").(uint)
 	queryResult := db.DB_CONNECTION.GetDB().Where("id = ?", id).Delete(&task)
-	return handleQueryResult(queryResult, c, RequestResponse{Message: "Deleted Successfully"})
+	return validators.HandleQueryResult(queryResult, c, validators.RequestResponse{Message: "Deleted Successfully"})
 }
 
 func UpdateTodo(c echo.Context) error {
 	updateObj := c.Get("updateObj").(map[string]interface{})
 	queryResult := db.DB_CONNECTION.GetDB().Model(&models.Task{}).Where("id = ?", updateObj["id"]).Updates(updateObj)
-	return handleQueryResult(queryResult, c, RequestResponse{Message: "Updated Successfully"})
-}
-
-func handleQueryResult(queryResult *gorm.DB, c echo.Context, successResponse RequestResponse) error {
-	if queryResult.Error != nil {
-		return c.JSON(http.StatusInternalServerError, RequestResponse{Message: queryResult.Error.Error()})
-	}
-	if queryResult.RowsAffected == 0 {
-		return c.JSON(http.StatusInternalServerError, RequestResponse{Message: "No rows affected"})
-	}
-	return c.JSON(http.StatusOK, successResponse)
+	return validators.HandleQueryResult(queryResult, c, validators.RequestResponse{Message: "Updated Successfully"})
 }

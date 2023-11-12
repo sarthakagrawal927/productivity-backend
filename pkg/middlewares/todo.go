@@ -37,11 +37,11 @@ func CreateTaskValidator(next echo.HandlerFunc) echo.HandlerFunc {
 		var err error
 
 		if task.Title, err = validateStringFromForm(c, "title"); err != nil {
-			return c.String(400, err.Error())
+			return HandleEchoError(c, err)
 		}
 
 		if task.Status, err = validateAndGetStatus(c.FormValue("status"), constants.Todo); err != nil {
-			return c.String(400, err.Error())
+			return HandleEchoError(c, err)
 		}
 
 		task.Desc = c.FormValue("desc")
@@ -54,7 +54,7 @@ func GetTasksValidator(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		status, err := validateInt("status", c.QueryParam("status"), constants.AllStatus)
 		if err != nil {
-			return c.String(400, err.Error())
+			return HandleEchoError(c, err)
 		}
 		c.Set("status", status)
 		return next(c)
@@ -63,9 +63,9 @@ func GetTasksValidator(next echo.HandlerFunc) echo.HandlerFunc {
 
 func DeleteTaskValidator(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		id, err := validateAndGetId(c.QueryParam("id"))
+		id, err := validateAndGetId(c.FormValue("id"))
 		if err != nil {
-			return c.String(400, err.Error())
+			return HandleEchoError(c, err)
 		}
 		c.Set("id", id)
 		return next(c)
@@ -78,7 +78,7 @@ func UpdateTaskValidator(next echo.HandlerFunc) echo.HandlerFunc {
 		var err error
 
 		if updateObj["id"], err = validateAndGetId(c.FormValue("id")); err != nil {
-			return c.String(400, err.Error())
+			return HandleEchoError(c, err)
 		}
 
 		if c.FormValue("title") != "" {
@@ -91,12 +91,12 @@ func UpdateTaskValidator(next echo.HandlerFunc) echo.HandlerFunc {
 
 		if c.FormValue("status") != "" {
 			if updateObj["status"], err = validateAndGetStatus(c.FormValue("status")); err != nil {
-				return c.String(400, err.Error())
+				return HandleEchoError(c, err)
 			}
 		}
 
 		if len(updateObj) == 0 {
-			return c.String(400, "no update field")
+			return HandleEchoError(c, fmt.Errorf("no update field"))
 		} else {
 			c.Set("updateObj", updateObj)
 		}
