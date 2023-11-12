@@ -11,9 +11,9 @@ import (
 
 type (
 	Stats struct {
-		Uptime       time.Time      `json:"uptime"`
-		RequestCount uint64         `json:"requestCount"`
-		Statuses     map[string]int `json:"statuses"`
+		Uptime       time.Time       `json:"uptime"`
+		RequestCount uint64          `json:"requestCount"`
+		Statuses     map[string]uint `json:"statuses"`
 		mutex        sync.RWMutex
 	}
 )
@@ -21,7 +21,7 @@ type (
 func NewStats() *Stats {
 	return &Stats{
 		Uptime:   time.Now(),
-		Statuses: map[string]int{},
+		Statuses: map[string]uint{},
 	}
 }
 

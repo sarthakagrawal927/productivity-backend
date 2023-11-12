@@ -6,12 +6,12 @@ type Habit struct {
 	gorm.Model
 	Meta
 
-	Status    int `json:"status"`
-	Frequency int `json:"frequency"`
+	Status    uint `json:"status"`
+	Frequency uint `json:"frequency"`
 }
 
 type HabitLog struct {
 	gorm.Model
 	HabitID uint `json:"habit_id"`
-	Amount  int  `json:"amount"`
+	Amount  uint `json:"amount"`
 }

@@ -7,7 +7,7 @@ import (
 )
 
 type postgresStruct struct {
-	connAttempts int
+	connAttempts uint
 	connTimeout  time.Duration
 
 	db *gorm.DB

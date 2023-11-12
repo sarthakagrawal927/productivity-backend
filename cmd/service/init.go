@@ -3,6 +3,7 @@ package service
 import (
 	"net/http"
 	"todo/pkg/metrics"
+	validators "todo/pkg/middlewares"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -21,7 +22,7 @@ func CreateService() {
 	e.Use(middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
 		LogURI:    true,
 		LogStatus: true,
-		LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error {
+		LogValuesFunc: func(_ echo.Context, v middleware.RequestLoggerValues) error {
 			logger.Info("request",
 				zap.String("URI", v.URI),
 				zap.Int("status", v.Status),
@@ -40,10 +41,10 @@ func CreateService() {
 		})
 	})
 
-	e.POST("/api/todo", CreateTodo)
-	e.GET("/api/todo", GetTodo)
-	e.DELETE("/api/todo", DeleteTodo)
-	e.PATCH("/api/todo", UpdateTodo)
+	e.POST("/api/todo", CreateTodo, validators.CreateTaskValidator)
+	e.GET("/api/todo", GetTodo, validators.GetTasksValidator)
+	e.DELETE("/api/todo", DeleteTodo, validators.DeleteTaskValidator)
+	e.PATCH("/api/todo", UpdateTodo, validators.UpdateTaskValidator)
 
 	e.POST("/api/admin/db_migrate", migrateDB)
 	e.POST("/api/admin/db_delete_all", deleteAllTasks)

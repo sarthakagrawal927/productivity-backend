@@ -13,12 +13,12 @@ type Meta struct {
 type Task struct {
 	gorm.Model
 	Meta
-	Status     int           `json:"status"`
+	Status     uint          `json:"status"`
 	DueDate    string        `json:"due_date"`
-	Priority   int           `json:"priority"`
-	Complexity int           `json:"complexity"`
-	Source     int           `json:"source"` // can be habit, goal or regular task
-	SourceId   int           `json:"source_id"`
+	Priority   uint          `json:"priority"`
+	Complexity uint          `json:"complexity"`
+	Source     uint          `json:"source"` // can be habit, goal or regular task
+	SourceId   uint          `json:"source_id"`
 	TagIds     pq.Int64Array `gorm:"type:integer[]"`
 }
 

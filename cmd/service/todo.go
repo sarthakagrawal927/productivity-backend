@@ -15,20 +15,14 @@ type RequestResponse struct {
 }
 
 func CreateTodo(c echo.Context) error {
-	task, err := validateAndSanitizeCreateTodo(c)
-	if err != nil {
-		return c.String(400, err.Error())
-	}
+	task := c.Get("task").(models.Task)
 	queryResult := db.DB_CONNECTION.GetDB().Create(&task)
 	return handleQueryResult(queryResult, c, RequestResponse{Message: "Created Successfully", Data: task})
 }
 
 func GetTodo(c echo.Context) error {
 	var tasks []models.Task
-	status, err := validateAndSanitizeGetTodo(c)
-	if err != nil {
-		return c.String(400, err.Error())
-	}
+	status := c.Get("status").(uint)
 	var queryResult *gorm.DB
 	if status == 0 {
 		queryResult = db.DB_CONNECTION.GetDB().Find(&tasks)
@@ -43,23 +37,14 @@ func GetTodo(c echo.Context) error {
 
 func DeleteTodo(c echo.Context) error {
 	var task models.Task
-
-	id, err := validateAndGetId(c.FormValue("id"))
-	if err != nil {
-		return c.String(400, err.Error())
-	}
-
+	id := c.Get("id").(uint)
 	queryResult := db.DB_CONNECTION.GetDB().Where("id = ?", id).Delete(&task)
 	return handleQueryResult(queryResult, c, RequestResponse{Message: "Deleted Successfully"})
 }
 
 func UpdateTodo(c echo.Context) error {
-	id, err := validateAndSanitizeUpdateTodoByID(c)
-	if err != nil {
-		return c.String(400, err.Error())
-	}
-
-	queryResult := db.DB_CONNECTION.GetDB().Model(&models.Task{}).Where("id = ?", id).Updates(c.Get("updateObj").(map[string]interface{}))
+	updateObj := c.Get("updateObj").(map[string]interface{})
+	queryResult := db.DB_CONNECTION.GetDB().Model(&models.Task{}).Where("id = ?", updateObj["id"]).Updates(updateObj)
 	return handleQueryResult(queryResult, c, RequestResponse{Message: "Updated Successfully"})
 }
 

@@ -6,7 +6,7 @@ type JournalEntry struct {
 	gorm.Model
 	Meta
 
-	Type int `json:"type"` // idea, journal, affirmation etc
+	Type uint `json:"type"` // idea, journal, affirmation etc
 }
 
 type JournalPrompt struct {

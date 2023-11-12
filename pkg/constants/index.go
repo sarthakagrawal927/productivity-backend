@@ -1,25 +1,23 @@
 package constants
 
-type TaskStatus int
-
-const AllStatus int = 0
+const AllStatus uint = 0
 
 const (
-	Todo TaskStatus = 1 + iota
+	Todo uint = 1 + iota
 	InProgress
 	Done
 	Backlog
 )
 
 const (
-	NoPriority int = 0
+	NoPriority uint = 0
 	LowPriority
 	MediumPriority
 	HighPriority
 )
 
 const (
-	Idea int = iota + 1
+	Idea uint = iota + 1
 	Gratitude
 	MindClear
 	DayPlanning
@@ -28,10 +26,10 @@ const (
 )
 
 const (
-	NoComplexity int = 0
+	NoComplexity uint = 0
 	LowComplexity
 	MediumComplexity
 	HighComplexity
 )
 
-var TaskTypeList = []int{int(Todo), int(InProgress), int(Done), int(Backlog)}
+var TaskTypeList = []uint{uint(Todo), uint(InProgress), uint(Done), uint(Backlog)}
