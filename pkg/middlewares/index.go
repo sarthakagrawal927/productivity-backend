@@ -15,7 +15,7 @@ func validateInt(key, value string, extraParams ...uint) (uint, error) {
 	var sanitizedInt uint
 
 	if value == "" {
-		var hasDefaultValue = len(extraParams) > 0
+		hasDefaultValue := len(extraParams) > 0
 		if hasDefaultValue {
 			return extraParams[0], nil
 		}
