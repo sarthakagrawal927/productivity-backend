@@ -21,7 +21,8 @@ func getNewPostgresDB(url string) (*postgresStruct, error) {
 
 	for pg.connAttempts > 0 {
 		pg.db, err = gorm.Open(postgres.Open(url), &gorm.Config{
-			Logger: queryLogger,
+			Logger:                 queryLogger,
+			SkipDefaultTransaction: true,
 		})
 		if err == nil {
 			break

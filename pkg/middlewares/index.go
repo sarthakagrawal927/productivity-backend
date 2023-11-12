@@ -11,7 +11,7 @@ import (
 ValidateInt validates if the value is a number and returns the sanitized value.
 Extra params first field will be optional parameter
 */
-func validateInt(key string, value string, extraParams ...uint) (uint, error) {
+func validateInt(key, value string, extraParams ...uint) (uint, error) {
 	var sanitizedInt uint
 
 	if value == "" {
@@ -33,7 +33,7 @@ func validateInt(key string, value string, extraParams ...uint) (uint, error) {
 	return sanitizedInt, nil
 }
 
-func validateString(key string, value string) (string, error) {
+func validateString(key, value string) (string, error) {
 	if value == "" {
 		return value, fmt.Errorf("%s is required", key)
 	}
