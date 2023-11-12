@@ -10,7 +10,7 @@ const (
 )
 
 const (
-	NoPriority uint = 0
+	NoPriority uint = iota + 0
 	LowPriority
 	MediumPriority
 	HighPriority
@@ -26,7 +26,7 @@ const (
 )
 
 const (
-	NoComplexity uint = 0
+	NoComplexity uint = iota + 0
 	LowComplexity
 	MediumComplexity
 	HighComplexity

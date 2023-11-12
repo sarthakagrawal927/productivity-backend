@@ -12,11 +12,11 @@ type RequestResponse struct {
 	Data    interface{} `json:"data"`
 }
 
-func HandleQueryResult(queryResult *gorm.DB, c echo.Context, successResponse RequestResponse) error {
+func HandleQueryResult(queryResult *gorm.DB, c echo.Context, successResponse RequestResponse, isRead bool) error {
 	if queryResult.Error != nil {
 		return HandleEchoError(c, queryResult.Error)
 	}
-	if queryResult.RowsAffected == 0 {
+	if queryResult.RowsAffected == 0 && !isRead {
 		return HandleEchoError(c, gorm.ErrRecordNotFound)
 	}
 	return c.JSON(http.StatusOK, successResponse)

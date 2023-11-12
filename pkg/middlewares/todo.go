@@ -44,6 +44,14 @@ func CreateTaskValidator(next echo.HandlerFunc) echo.HandlerFunc {
 			return HandleEchoError(c, err)
 		}
 
+		if task.Complexity, err = validateAndGetStatus(c.FormValue("complexity"), constants.NoComplexity); err != nil {
+			return HandleEchoError(c, err)
+		}
+
+		if task.Priority, err = validateAndGetStatus(c.FormValue("priority"), constants.NoPriority); err != nil {
+			return HandleEchoError(c, err)
+		}
+
 		task.Desc = c.FormValue("desc")
 		c.Set("task", task)
 		return next(c)
@@ -91,6 +99,18 @@ func UpdateTaskValidator(next echo.HandlerFunc) echo.HandlerFunc {
 
 		if c.FormValue("status") != "" {
 			if updateObj["status"], err = validateAndGetStatus(c.FormValue("status")); err != nil {
+				return HandleEchoError(c, err)
+			}
+		}
+
+		if c.FormValue("complexity") != "" {
+			if updateObj["complexity"], err = validateAndGetStatus(c.FormValue("complexity")); err != nil {
+				return HandleEchoError(c, err)
+			}
+		}
+
+		if c.FormValue("priority") != "" {
+			if updateObj["priority"], err = validateAndGetStatus(c.FormValue("priority")); err != nil {
 				return HandleEchoError(c, err)
 			}
 		}
