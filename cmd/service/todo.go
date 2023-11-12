@@ -29,10 +29,7 @@ func GetTodo(c echo.Context) error {
 	} else {
 		queryResult = db.DB_CONNECTION.GetDB().Where("status = ?", status).Find(&tasks)
 	}
-	if queryResult.Error != nil {
-		return c.String(400, queryResult.Error.Error())
-	}
-	return c.JSON(http.StatusOK, tasks)
+	return handleQueryResult(queryResult, c, RequestResponse{Message: "Success", Data: tasks})
 }
 
 func DeleteTodo(c echo.Context) error {
@@ -48,12 +45,12 @@ func UpdateTodo(c echo.Context) error {
 	return handleQueryResult(queryResult, c, RequestResponse{Message: "Updated Successfully"})
 }
 
-func handleQueryResult(queryResult *gorm.DB, c echo.Context, successMessage RequestResponse) error {
+func handleQueryResult(queryResult *gorm.DB, c echo.Context, successResponse RequestResponse) error {
 	if queryResult.Error != nil {
-		return c.String(400, queryResult.Error.Error())
+		return c.JSON(http.StatusInternalServerError, RequestResponse{Message: queryResult.Error.Error()})
 	}
 	if queryResult.RowsAffected == 0 {
-		return c.String(400, "No such task")
+		return c.JSON(http.StatusInternalServerError, RequestResponse{Message: "No rows affected"})
 	}
-	return c.JSON(http.StatusOK, successMessage)
+	return c.JSON(http.StatusOK, successResponse)
 }
