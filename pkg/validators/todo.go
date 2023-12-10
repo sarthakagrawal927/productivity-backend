@@ -11,14 +11,14 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func validateAndGetStatus(status string, extraParams ...uint) (uint, error) {
+func validateIntFromArray(status string, options []uint, extraParams ...uint) (uint, error) {
 	sanitizedStatus, err := ValidateInt("status", status, extraParams...)
 	if err != nil {
 		return sanitizedStatus, err
 	}
 
-	if !slices.Contains(constants.TaskTypeList, uint(sanitizedStatus)) {
-		return sanitizedStatus, fmt.Errorf("status should be one of %v", constants.TaskTypeList)
+	if !slices.Contains(options, uint(sanitizedStatus)) {
+		return sanitizedStatus, fmt.Errorf("status should be one of %v", options)
 	}
 
 	return sanitizedStatus, nil
@@ -42,15 +42,15 @@ func CreateTaskValidator(next echo.HandlerFunc) echo.HandlerFunc {
 			return middleware.HandleEchoError(c, err)
 		}
 
-		if task.Status, err = validateAndGetStatus(c.FormValue("status"), constants.Todo); err != nil {
+		if task.Status, err = validateIntFromArray(c.FormValue("status"), constants.TaskTypeList, constants.Todo); err != nil {
 			return middleware.HandleEchoError(c, err)
 		}
 
-		if task.Complexity, err = validateAndGetStatus(c.FormValue("complexity"), constants.NoComplexity); err != nil {
+		if task.Complexity, err = validateIntFromArray(c.FormValue("complexity"), constants.ComplexityTypeList, constants.NoComplexity); err != nil {
 			return middleware.HandleEchoError(c, err)
 		}
 
-		if task.Priority, err = validateAndGetStatus(c.FormValue("priority"), constants.NoPriority); err != nil {
+		if task.Priority, err = validateIntFromArray(c.FormValue("priority"), constants.PriorityTypeList, constants.NoPriority); err != nil {
 			return middleware.HandleEchoError(c, err)
 		}
 
@@ -100,19 +100,19 @@ func UpdateTaskValidator(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 
 		if c.FormValue("status") != "" {
-			if updateObj["status"], err = validateAndGetStatus(c.FormValue("status")); err != nil {
+			if updateObj["status"], err = validateIntFromArray(c.FormValue("status"), constants.TaskTypeList); err != nil {
 				return middleware.HandleEchoError(c, err)
 			}
 		}
 
 		if c.FormValue("complexity") != "" {
-			if updateObj["complexity"], err = validateAndGetStatus(c.FormValue("complexity")); err != nil {
+			if updateObj["complexity"], err = validateIntFromArray(c.FormValue("complexity"), constants.ComplexityTypeList); err != nil {
 				return middleware.HandleEchoError(c, err)
 			}
 		}
 
 		if c.FormValue("priority") != "" {
-			if updateObj["priority"], err = validateAndGetStatus(c.FormValue("priority")); err != nil {
+			if updateObj["priority"], err = validateIntFromArray(c.FormValue("priority"), constants.PriorityTypeList); err != nil {
 				return middleware.HandleEchoError(c, err)
 			}
 		}
