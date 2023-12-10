@@ -3,7 +3,7 @@ package service
 import (
 	"net/http"
 	"todo/pkg/metrics"
-	validators "todo/pkg/middlewares"
+	validators "todo/pkg/validators"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -45,6 +45,10 @@ func CreateService() {
 	e.GET("/api/todo", GetTodo, validators.GetTasksValidator)
 	e.DELETE("/api/todo", DeleteTodo, validators.DeleteTaskValidator)
 	e.PATCH("/api/todo", UpdateTodo, validators.UpdateTaskValidator)
+
+	e.POST("/api/journal", AddJournalEntry, validators.CreateJournalValidator)
+	e.GET("/api/journal", GetJournalEntries, validators.GetJournalValidator)
+	e.GET("/api/journal/:id", GetJournalEntry, validators.GetJournalEntryValidator)
 
 	e.POST("/api/admin/db_migrate", migrateDB)
 	e.POST("/api/admin/db_delete_all", deleteAllTasks)

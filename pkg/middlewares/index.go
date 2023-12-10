@@ -1,45 +1,27 @@
-package validators
+package middleware
 
 import (
-	"fmt"
-	"strconv"
+	"net/http"
 
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 )
 
-/*
-ValidateInt validates if the value is a number and returns the sanitized value.
-Extra params first field will be optional parameter
-*/
-func validateInt(key, value string, extraParams ...uint) (uint, error) {
-	var sanitizedInt uint
-
-	if value == "" {
-		hasDefaultValue := len(extraParams) > 0
-		if hasDefaultValue {
-			return extraParams[0], nil
-		}
-
-		return sanitizedInt, fmt.Errorf("%s is required", key)
-	}
-
-	sanitizedSignedInt, err := strconv.Atoi(value)
-	if err != nil {
-		return sanitizedInt, fmt.Errorf("%s should be number: %v", key, err)
-	} else {
-		sanitizedInt = uint(sanitizedSignedInt)
-	}
-
-	return sanitizedInt, nil
+type RequestResponse struct {
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
 }
 
-func validateString(key, value string) (string, error) {
-	if value == "" {
-		return value, fmt.Errorf("%s is required", key)
+func HandleQueryResult(queryResult *gorm.DB, c echo.Context, successResponse RequestResponse, isRead bool) error {
+	if queryResult.Error != nil {
+		return HandleEchoError(c, queryResult.Error)
 	}
-	return value, nil
+	if queryResult.RowsAffected == 0 && !isRead {
+		return HandleEchoError(c, gorm.ErrRecordNotFound)
+	}
+	return c.JSON(http.StatusOK, successResponse)
 }
 
-func validateStringFromForm(c echo.Context, key string) (string, error) {
-	return validateString(key, c.FormValue(key))
+func HandleEchoError(c echo.Context, err error) error {
+	return c.JSON(http.StatusBadRequest, RequestResponse{Message: err.Error()})
 }

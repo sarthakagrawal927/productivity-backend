@@ -32,4 +32,6 @@ const (
 	HighComplexity
 )
 
+const DefaultPageSize = 20
+
 var TaskTypeList = []uint{uint(Todo), uint(InProgress), uint(Done), uint(Backlog)}

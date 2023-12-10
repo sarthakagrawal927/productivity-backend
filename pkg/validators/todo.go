@@ -6,11 +6,13 @@ import (
 	"todo/pkg/constants"
 	"todo/pkg/models"
 
+	middleware "todo/pkg/middlewares"
+
 	"github.com/labstack/echo/v4"
 )
 
 func validateAndGetStatus(status string, extraParams ...uint) (uint, error) {
-	sanitizedStatus, err := validateInt("status", status, extraParams...)
+	sanitizedStatus, err := ValidateInt("status", status, extraParams...)
 	if err != nil {
 		return sanitizedStatus, err
 	}
@@ -23,7 +25,7 @@ func validateAndGetStatus(status string, extraParams ...uint) (uint, error) {
 }
 
 func validateAndGetId(id string) (uint, error) {
-	sanitizedId, err := validateInt("id", id)
+	sanitizedId, err := ValidateInt("id", id)
 	if err != nil {
 		return uint(sanitizedId), err
 	}
@@ -36,20 +38,20 @@ func CreateTaskValidator(next echo.HandlerFunc) echo.HandlerFunc {
 		task := models.Task{}
 		var err error
 
-		if task.Title, err = validateStringFromForm(c, "title"); err != nil {
-			return HandleEchoError(c, err)
+		if task.Title, err = ValidateStringFromForm(c, "title"); err != nil {
+			return middleware.HandleEchoError(c, err)
 		}
 
 		if task.Status, err = validateAndGetStatus(c.FormValue("status"), constants.Todo); err != nil {
-			return HandleEchoError(c, err)
+			return middleware.HandleEchoError(c, err)
 		}
 
 		if task.Complexity, err = validateAndGetStatus(c.FormValue("complexity"), constants.NoComplexity); err != nil {
-			return HandleEchoError(c, err)
+			return middleware.HandleEchoError(c, err)
 		}
 
 		if task.Priority, err = validateAndGetStatus(c.FormValue("priority"), constants.NoPriority); err != nil {
-			return HandleEchoError(c, err)
+			return middleware.HandleEchoError(c, err)
 		}
 
 		task.Desc = c.FormValue("desc")
@@ -60,9 +62,9 @@ func CreateTaskValidator(next echo.HandlerFunc) echo.HandlerFunc {
 
 func GetTasksValidator(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		status, err := validateInt("status", c.QueryParam("status"), constants.AllStatus)
+		status, err := ValidateInt("status", c.QueryParam("status"), constants.AllStatus)
 		if err != nil {
-			return HandleEchoError(c, err)
+			return middleware.HandleEchoError(c, err)
 		}
 		c.Set("status", status)
 		return next(c)
@@ -73,7 +75,7 @@ func DeleteTaskValidator(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		id, err := validateAndGetId(c.FormValue("id"))
 		if err != nil {
-			return HandleEchoError(c, err)
+			return middleware.HandleEchoError(c, err)
 		}
 		c.Set("id", id)
 		return next(c)
@@ -86,7 +88,7 @@ func UpdateTaskValidator(next echo.HandlerFunc) echo.HandlerFunc {
 		var err error
 
 		if updateObj["id"], err = validateAndGetId(c.FormValue("id")); err != nil {
-			return HandleEchoError(c, err)
+			return middleware.HandleEchoError(c, err)
 		}
 
 		if c.FormValue("title") != "" {
@@ -99,24 +101,24 @@ func UpdateTaskValidator(next echo.HandlerFunc) echo.HandlerFunc {
 
 		if c.FormValue("status") != "" {
 			if updateObj["status"], err = validateAndGetStatus(c.FormValue("status")); err != nil {
-				return HandleEchoError(c, err)
+				return middleware.HandleEchoError(c, err)
 			}
 		}
 
 		if c.FormValue("complexity") != "" {
 			if updateObj["complexity"], err = validateAndGetStatus(c.FormValue("complexity")); err != nil {
-				return HandleEchoError(c, err)
+				return middleware.HandleEchoError(c, err)
 			}
 		}
 
 		if c.FormValue("priority") != "" {
 			if updateObj["priority"], err = validateAndGetStatus(c.FormValue("priority")); err != nil {
-				return HandleEchoError(c, err)
+				return middleware.HandleEchoError(c, err)
 			}
 		}
 
 		if len(updateObj) == 0 {
-			return HandleEchoError(c, fmt.Errorf("no update field"))
+			return middleware.HandleEchoError(c, fmt.Errorf("no update field"))
 		} else {
 			c.Set("updateObj", updateObj)
 		}

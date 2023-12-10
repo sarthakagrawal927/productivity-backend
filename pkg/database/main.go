@@ -3,7 +3,6 @@ package db
 import (
 	"fmt"
 	"time"
-	"todo/pkg/models"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -33,16 +32,6 @@ func getNewPostgresDB(url string) (*postgresStruct, error) {
 	}
 
 	return pg, err
-}
-
-func Migrations() error {
-	fmt.Println("[DB] Migrating models")
-	err := DB_CONNECTION.GetDB().AutoMigrate(&models.Task{})
-	if err != nil {
-		fmt.Println("Error migrating models")
-	}
-	fmt.Println("[DB] Migrated models")
-	return err
 }
 
 var DB_CONNECTION *postgresStruct
