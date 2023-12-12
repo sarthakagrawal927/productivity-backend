@@ -34,6 +34,8 @@ const (
 
 const DefaultPageSize = 20
 
-var TaskTypeList = []uint{uint(Todo), uint(InProgress), uint(Done), uint(Backlog)}
-var PriorityTypeList = []uint{uint(NoPriority), uint(LowPriority), uint(MediumPriority), uint(HighPriority)}
-var ComplexityTypeList = []uint{uint(NoComplexity), uint(LowComplexity), uint(MediumComplexity), uint(HighComplexity)}
+var (
+	TaskTypeList       = []uint{uint(Todo), uint(InProgress), uint(Done), uint(Backlog)}
+	PriorityTypeList   = []uint{uint(NoPriority), uint(LowPriority), uint(MediumPriority), uint(HighPriority)}
+	ComplexityTypeList = []uint{uint(NoComplexity), uint(LowComplexity), uint(MediumComplexity), uint(HighComplexity)}
+)
