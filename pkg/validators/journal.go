@@ -38,8 +38,14 @@ func GetJournalValidator(next echo.HandlerFunc) echo.HandlerFunc {
 			return middleware.HandleEchoError(c, err)
 		}
 
+		journalType, err := ValidateInt("type", c.QueryParam("type"), 0)
+		if err != nil {
+			return middleware.HandleEchoError(c, err)
+		}
+
 		c.Set("pagenum", int(pagenum))
 		c.Set("pagesize", int(pagesize))
+		c.Set("type", int(journalType))
 		return next(c)
 	}
 }

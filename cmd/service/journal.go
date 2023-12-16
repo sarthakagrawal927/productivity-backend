@@ -1,6 +1,7 @@
 package service
 
 import (
+	"todo/pkg/constants"
 	db "todo/pkg/database"
 	middleware "todo/pkg/middlewares"
 	"todo/pkg/models"
@@ -20,8 +21,15 @@ func GetJournalEntries(c echo.Context) error {
 
 	pagenum := c.Get("pagenum").(int)
 	pagesize := c.Get("pagesize").(int)
+	journalType := c.Get("type").(uint)
 
-	queryResult := db.DB_CONNECTION.GetDB().Select("id", "title", "created_at").Limit(pagesize).Offset((pagenum - 1) * pagesize).Order(clause.OrderByColumn{Column: clause.Column{Name: "created_at"}, Desc: true}).Find(&journalEntries)
+	journalTypes := constants.JournalTypeList
+	if journalType != 0 {
+		journalTypes = []uint{journalType}
+	}
+
+	queryResult := db.DB_CONNECTION.GetDB().Select("id", "title", "created_at").Where("type in ?", journalTypes).Limit(pagesize).Offset((pagenum - 1) * pagesize).Order(clause.OrderByColumn{Column: clause.Column{Name: "created_at"}, Desc: true}).Find(&journalEntries)
+
 	return middleware.HandleQueryResult(queryResult, c, middleware.RequestResponse{Message: "Success", Data: journalEntries}, true)
 }
 
