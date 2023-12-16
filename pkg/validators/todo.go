@@ -2,7 +2,6 @@ package validators
 
 import (
 	"fmt"
-	"slices"
 	"todo/pkg/constants"
 	"todo/pkg/models"
 
@@ -11,21 +10,8 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func validateIntFromArray(status string, options []uint, extraParams ...uint) (uint, error) {
-	sanitizedStatus, err := ValidateInt("status", status, extraParams...)
-	if err != nil {
-		return sanitizedStatus, err
-	}
-
-	if !slices.Contains(options, uint(sanitizedStatus)) {
-		return sanitizedStatus, fmt.Errorf("status should be one of %v", options)
-	}
-
-	return sanitizedStatus, nil
-}
-
 func validateAndGetId(id string) (uint, error) {
-	sanitizedId, err := ValidateInt("id", id)
+	sanitizedId, err := validateInt("id", id)
 	if err != nil {
 		return uint(sanitizedId), err
 	}
@@ -38,7 +24,7 @@ func CreateTaskValidator(next echo.HandlerFunc) echo.HandlerFunc {
 		task := models.Task{}
 		var err error
 
-		if task.Title, err = ValidateStringFromForm(c, "title"); err != nil {
+		if task.Title, err = validateStringFromForm(c, "title"); err != nil {
 			return middleware.HandleEchoError(c, err)
 		}
 
@@ -62,7 +48,7 @@ func CreateTaskValidator(next echo.HandlerFunc) echo.HandlerFunc {
 
 func GetTasksValidator(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		status, err := ValidateInt("status", c.QueryParam("status"), constants.AllStatus)
+		status, err := validateInt("status", c.QueryParam("status"), constants.AllStatus)
 		if err != nil {
 			return middleware.HandleEchoError(c, err)
 		}

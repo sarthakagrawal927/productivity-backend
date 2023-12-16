@@ -13,11 +13,15 @@ func CreateJournalValidator(next echo.HandlerFunc) echo.HandlerFunc {
 		journal := models.JournalEntry{}
 		var err error
 
-		if journal.Title, err = ValidateStringFromForm(c, "title"); err != nil {
+		if journal.Title, err = validateStringFromForm(c, "title"); err != nil {
 			return middleware.HandleEchoError(c, err)
 		}
 
-		if journal.Desc, err = ValidateStringFromForm(c, "desc"); err != nil {
+		if journal.Desc, err = validateStringFromForm(c, "desc"); err != nil {
+			return middleware.HandleEchoError(c, err)
+		}
+
+		if journal.Type, err = validateIntFromArray(c.FormValue("type"), constants.JournalTypeList); err != nil {
 			return middleware.HandleEchoError(c, err)
 		}
 
@@ -28,17 +32,17 @@ func CreateJournalValidator(next echo.HandlerFunc) echo.HandlerFunc {
 
 func GetJournalValidator(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		pagenum, err := ValidateInt("pagenum", c.QueryParam("pagenum"), 1)
+		pagenum, err := validateInt("pagenum", c.QueryParam("pagenum"), 1)
 		if err != nil {
 			return middleware.HandleEchoError(c, err)
 		}
 
-		pagesize, err := ValidateInt("pagesize", c.QueryParam("pagesize"), constants.DefaultPageSize)
+		pagesize, err := validateInt("pagesize", c.QueryParam("pagesize"), constants.DefaultPageSize)
 		if err != nil {
 			return middleware.HandleEchoError(c, err)
 		}
 
-		journalType, err := ValidateInt("type", c.QueryParam("type"), 0)
+		journalType, err := validateIntFromArray(c.QueryParam("type"), constants.JournalTypeList, 0)
 		if err != nil {
 			return middleware.HandleEchoError(c, err)
 		}

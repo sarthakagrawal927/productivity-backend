@@ -2,16 +2,17 @@ package validators
 
 import (
 	"fmt"
+	"slices"
 	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
 
 /*
-ValidateInt validates if the value is a number and returns the sanitized value.
+validateInt validates if the value is a number and returns the sanitized value.
 Extra params first field will be optional parameter
 */
-func ValidateInt(key, value string, extraParams ...uint) (uint, error) {
+func validateInt(key, value string, extraParams ...uint) (uint, error) {
 	var sanitizedInt uint
 
 	if value == "" {
@@ -33,13 +34,38 @@ func ValidateInt(key, value string, extraParams ...uint) (uint, error) {
 	return sanitizedInt, nil
 }
 
-func ValidateString(key, value string) (string, error) {
+func validateString(key, value string) (string, error) {
 	if value == "" {
 		return value, fmt.Errorf("%s is required", key)
 	}
 	return value, nil
 }
 
-func ValidateStringFromForm(c echo.Context, key string) (string, error) {
-	return ValidateString(key, c.FormValue(key))
+func validateStringFromForm(c echo.Context, key string) (string, error) {
+	return validateString(key, c.FormValue(key))
+}
+
+func validateIntFromArray(status string, options []uint, extraParams ...uint) (uint, error) {
+	sanitizedStatus, err := validateInt("status", status, extraParams...)
+	if err != nil {
+		return sanitizedStatus, err
+	}
+
+	if !slices.Contains(options, uint(sanitizedStatus)) {
+		return sanitizedStatus, fmt.Errorf("status should be one of %v", options)
+	}
+
+	return sanitizedStatus, nil
+}
+
+// consider making a function like this
+func validateTitleDescInterface(c echo.Context, obj interface{}) (interface{}, error) {
+	var err error
+	if obj.(map[string]interface{})["title"], err = validateStringFromForm(c, "title"); err != nil {
+		return nil, err
+	}
+	if obj.(map[string]interface{})["desc"], err = validateStringFromForm(c, "desc"); err != nil {
+		return nil, err
+	}
+	return obj, nil
 }
