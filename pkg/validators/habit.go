@@ -1,6 +1,7 @@
 package validators
 
 import (
+	"time"
 	"todo/pkg/constants"
 	middleware "todo/pkg/middlewares"
 	"todo/pkg/models"
@@ -37,6 +38,10 @@ func CreateHabitValidator(next echo.HandlerFunc) echo.HandlerFunc {
 			return middleware.HandleEchoError(c, err)
 		}
 
+		if habit.Anti, err = validateBool("anti", c.FormValue("anti")); err != nil {
+			return middleware.HandleEchoError(c, err)
+		}
+
 		c.Set("habit", habit)
 		return next(c)
 	}
@@ -44,6 +49,45 @@ func CreateHabitValidator(next echo.HandlerFunc) echo.HandlerFunc {
 
 func GetHabitsValidator(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
+		return next(c)
+	}
+}
+
+func CreateHabitLogValidator(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		habitLog := models.HabitLog{}
+		var err error
+
+		if habitLog.HabitID, err = validateInt("habit_id", c.FormValue("habit_id")); err != nil {
+			return middleware.HandleEchoError(c, err)
+		}
+
+		if habitLog.ResultCount, err = validateInt("count", c.FormValue("count")); err != nil {
+			return middleware.HandleEchoError(c, err)
+		}
+
+		var stringDate string
+		if stringDate, err = validateStringFromForm(c, "date"); err != nil {
+			return middleware.HandleEchoError(c, err)
+		}
+
+		if habitLog.Date, err = time.Parse("YYYY-MM-DD", stringDate); err != nil {
+			return middleware.HandleEchoError(c, err)
+		}
+
+		c.Set("habit_log", habitLog)
+		return next(c)
+	}
+}
+
+func GetSingleHabitValidator(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		id, err := validateAndGetId(c.Param("id"))
+		if err != nil {
+			return middleware.HandleEchoError(c, err)
+		}
+
+		c.Set("id", int(id))
 		return next(c)
 	}
 }

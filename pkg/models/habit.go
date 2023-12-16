@@ -1,6 +1,10 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type Habit struct {
 	gorm.Model
@@ -18,7 +22,7 @@ type Habit struct {
 type HabitLog struct {
 	gorm.Model
 
-	HabitID     uint   `json:"habit_id"`
-	Date        string `json:"date"`
-	ResultCount uint   `json:"result_count"`
+	HabitID     uint      `json:"habit_id"`
+	Date        time.Time `json:"date"`
+	ResultCount uint      `json:"result_count"`
 }

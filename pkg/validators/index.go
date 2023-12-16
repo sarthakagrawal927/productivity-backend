@@ -58,6 +58,19 @@ func validateIntFromArray(status string, options []uint, extraParams ...uint) (u
 	return sanitizedStatus, nil
 }
 
+func validateBool(key, value string) (bool, error) {
+	if value == "" {
+		return false, fmt.Errorf("%s is required", key)
+	}
+
+	sanitizedBool, err := strconv.ParseBool(value)
+	if err != nil {
+		return false, fmt.Errorf("%s should be boolean: %v", key, err)
+	}
+
+	return sanitizedBool, nil
+}
+
 // consider making a function like this
 func validateTitleDescInterface(c echo.Context, obj interface{}) (interface{}, error) {
 	var err error
