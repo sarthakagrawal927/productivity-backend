@@ -32,6 +32,22 @@ const (
 	HighComplexity
 )
 
+const (
+	HabitDailyFreq uint = iota + 1
+	HabitWeeklyFreq
+)
+
+const (
+	HabitPaused uint = iota + 0
+	HabitActive
+)
+
+const (
+	HabitTimeMode  uint = iota + 1
+	HabitCountMode      // for example, 10 pushups
+	HabitMlMode         // for example, 1 liter of water
+)
+
 const DefaultPageSize = 20
 
 var (
@@ -39,4 +55,7 @@ var (
 	PriorityTypeList   = []uint{uint(NoPriority), uint(LowPriority), uint(MediumPriority), uint(HighPriority)}
 	ComplexityTypeList = []uint{uint(NoComplexity), uint(LowComplexity), uint(MediumComplexity), uint(HighComplexity)}
 	JournalTypeList    = []uint{uint(Idea), uint(Gratitude), uint(MindClear), uint(DayPlanning), uint(DayWrap), uint(Event)}
+	HabitFreqTypeList  = []uint{uint(HabitDailyFreq), uint(HabitWeeklyFreq)}
+	HabitStatusList    = []uint{uint(HabitPaused), uint(HabitActive)}
+	HabitModeList      = []uint{uint(HabitTimeMode), uint(HabitCountMode), uint(HabitMlMode)}
 )
