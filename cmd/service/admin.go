@@ -5,6 +5,7 @@ import (
 	"todo/pkg/models"
 
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 )
 
 func migrateDB(c echo.Context) error {
@@ -28,12 +29,19 @@ func deleteAllTasks(c echo.Context) error {
 func seedTasks(c echo.Context) error {
 	tasks := []models.Task{
 		{
-			Meta: models.Meta{
-				Title: "Task 1",
-				Desc:  "Task 1 Desc",
-			},
+			Model:      gorm.Model{},
+			Meta:       models.Meta{Title: "Task 1", Desc: "Task 1 Desc"},
+			Status:     1,
+			DueDate:    "01012024",
+			Priority:   1,
+			Complexity: 1,
+			Source:     1,
+			SourceId:   1,
+			TagIds:     []int64{},
 		},
 	}
+	// AutoMigrate will automatically create the table based on the struct definition.
+	db.DB_CONNECTION.GetDB().AutoMigrate(&models.Task{})
 
 	transactionResult := db.DB_CONNECTION.GetDB().Create(&tasks)
 	if transactionResult.Error != nil {
