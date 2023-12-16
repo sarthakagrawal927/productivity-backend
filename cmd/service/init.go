@@ -2,6 +2,7 @@ package service
 
 import (
 	"net/http"
+	"todo/pkg/algorithms"
 	"todo/pkg/metrics"
 	validators "todo/pkg/validators"
 
@@ -54,6 +55,8 @@ func CreateService() {
 	e.POST("/api/admin/db_delete_all", deleteAllTasks)
 	e.GET("/api/admin/metrics", s.Handle)
 	e.POST("/api/admin/db_seed", seedTasks)
+
+	e.GET("/api/todo/max", algorithms.GetMaxPriorityTask, validators.GetTasksValidator)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }
