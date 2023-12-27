@@ -1,0 +1,45 @@
+❯ sudo su postgres
+[sudo] password for aniruddha: 
+postgres@aniruddha-G3-3579:/home/aniruddha$ psql
+psql (15.4 (Ubuntu 15.4-2.pgdg20.04+1), server 10.23 (Ubuntu 10.23-2.pgdg20.04+1))
+Type "help" for help.
+
+postgres=# \conninfo 
+You are connected to database "postgres" as user "postgres" via socket in "/var/run/postgresql" at port "5432".
+postgres=# \l
+postgres=# 
+postgres=# \du
+                                     List of roles
+   Role name   |                         Attributes                         | Member of 
+---------------+------------------------------------------------------------+-----------
+ myprojectuser |                                                            | {}
+ postgres      | Superuser, Create role, Create DB, Replication, Bypass RLS | {}
+ symblai       |                                                            | {}
+
+postgres=# \password
+Enter new password for user "postgres": 
+Enter it again: 
+postgres=# \c moves_dev
+connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL:  database "moves_dev" does not exist
+Previous connection kept
+postgres=# CREATE DATABASE moves_dev
+postgres-# \c moves_dev
+connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL:  database "moves_dev" does not exist
+Previous connection kept
+postgres-# CREATE DATABASE moves_dev;
+ERROR:  syntax error at or near "CREATE"
+LINE 2: CREATE DATABASE moves_dev;
+        ^
+postgres=# CREATE DATABASE moves_dev;
+CREATE DATABASE
+postgres=# \c moves_dev
+psql (15.4 (Ubuntu 15.4-2.pgdg20.04+1), server 10.23 (Ubuntu 10.23-2.pgdg20.04+1))
+You are now connected to database "moves_dev" as user "postgres".
+moves_dev=# 
+
+There are multiple articles related to productivity on web
+for example - [link](https://www.personatalent.com/productivity/habits-of-highly-productive-people)
+
+we could give option for people to choose any article and plug into their shecdule
+
+
