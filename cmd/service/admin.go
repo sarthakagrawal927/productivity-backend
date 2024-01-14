@@ -8,7 +8,20 @@ import (
 )
 
 func migrateDB(c echo.Context) error {
-	err := db.DB_CONNECTION.GetDB().AutoMigrate(&models.Task{}, &models.JournalEntry{})
+	err := db.DB_CONNECTION.GetDB().AutoMigrate(
+		&models.User{},
+
+		&models.Task{},
+		&models.Habit{},
+		&models.HabitLog{},
+
+		&models.JournalEntry{},
+		&models.JournalPrompt{},
+
+		&models.Tag{},
+		&models.Project{},
+		&models.Goal{},
+	)
 	if err != nil {
 		return c.JSON(500, "Error migrating models")
 	} else {

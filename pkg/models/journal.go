@@ -5,12 +5,14 @@ import "gorm.io/gorm"
 type JournalEntry struct {
 	gorm.Model
 	Meta
+	UserId uint `json:"user_id"`
 
 	Type uint `json:"type"` // idea, journal, affirmation etc
 }
 
 type JournalPrompt struct {
 	gorm.Model
+	UserId    uint   `json:"user_id"`
 	Question  string `json:"question"`
 	PopupTime string `json:"popup_time"`
 }

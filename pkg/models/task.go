@@ -13,35 +13,40 @@ type Meta struct {
 type Task struct {
 	gorm.Model
 	Meta
+	UserId     uint          `json:"user_id"`
 	Status     uint          `json:"status"`
 	DueDate    string        `json:"due_date"`
 	Priority   uint          `json:"priority"`
 	Complexity uint          `json:"complexity"`
-	Source     uint          `json:"source"` // can be habit, goal or regular task
+	Source     uint          `json:"source"` // can be habit, project or regular task
 	SourceId   uint          `json:"source_id"`
-	TagIds     pq.Int64Array `gorm:"type:integer[]"`
+	TagIds     pq.Int64Array `gorm:"type:integer[]" json:"tag_ids"`
 }
 
-type Schedule struct {
+// type Schedule struct {
+// 	gorm.Model
+// 	StartTime string `json:"start_time"`
+// 	EndTime   string `json:"end_time"`
+// }
+
+type Tag struct { // can be used for both tasks and journal entries
 	gorm.Model
-	StartTime string `json:"start_time"`
-	EndTime   string `json:"end_time"`
+	UserId uint   `json:"user_id"`
+	Name   string `json:"name"`
 }
 
-// TODO Consider merging both goal & project or tags, unsure whether all 3 are needed
-type Tag struct {
+// The goal is your vision for better and brighter future. The projects are your best plans how to achieve your goal. A goal is a collection of projects.
+type Project struct { // collection of tasks
 	gorm.Model
-	Name string `json:"name"`
+	UserId uint `json:"user_id"`
+	GoalID uint `json:"goal_id"`
+	Meta
 }
 
 type Goal struct {
 	gorm.Model
+	UserId uint `json:"user_id"`
 	Meta
 
 	Why string `json:"why"`
-}
-
-type Project struct {
-	gorm.Model
-	Meta
 }

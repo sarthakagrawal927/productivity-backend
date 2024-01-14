@@ -1,11 +1,14 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"github.com/lib/pq"
+	"gorm.io/gorm"
+)
 
 // Will add models related to user here, in future.
 type User struct {
 	gorm.Model
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	FullName string `json:"full_name"`
+	Email      string        `json:"email"`
+	FullName   string        `json:"full_name"`
+	TodayTasks pq.Int64Array `gorm:"type:integer[]" json:"today_tasks"`
 }

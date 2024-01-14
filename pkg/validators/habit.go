@@ -22,7 +22,7 @@ func CreateHabitValidator(next echo.HandlerFunc) echo.HandlerFunc {
 			return middleware.HandleEchoError(c, err)
 		}
 
-		if habit.Goal, err = validateInt("goal", c.FormValue("goal")); err != nil {
+		if habit.Target, err = validateInt("target", c.FormValue("target")); err != nil {
 			return middleware.HandleEchoError(c, err)
 		}
 
