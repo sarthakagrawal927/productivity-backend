@@ -47,9 +47,9 @@ func GetJournalValidator(next echo.HandlerFunc) echo.HandlerFunc {
 			return middleware.HandleEchoError(c, err)
 		}
 
-		c.Set("pagenum", int(pagenum))
-		c.Set("pagesize", int(pagesize))
-		c.Set("type", int(journalType))
+		c.Set("pagenum", (pagenum))
+		c.Set("pagesize", (pagesize))
+		c.Set("type", uint(journalType))
 		return next(c)
 	}
 }

@@ -19,8 +19,8 @@ func AddJournalEntry(c echo.Context) error {
 func GetJournalEntries(c echo.Context) error {
 	var journalEntries []models.JournalEntry
 
-	pagenum := c.Get("pagenum").(int)
-	pagesize := c.Get("pagesize").(int)
+	pagenum := int(c.Get("pagenum").(uint))
+	pagesize := int(c.Get("pagesize").(uint))
 	journalType := c.Get("type").(uint)
 
 	journalTypes := constants.JournalTypeList

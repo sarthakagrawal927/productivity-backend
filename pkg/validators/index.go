@@ -51,6 +51,10 @@ func validateIntFromArray(status string, options []uint, extraParams ...uint) (u
 		return sanitizedStatus, err
 	}
 
+	if sanitizedStatus == 0 {
+		return sanitizedStatus, nil
+	}
+
 	if !slices.Contains(options, uint(sanitizedStatus)) {
 		return sanitizedStatus, fmt.Errorf("status should be one of %v", options)
 	}

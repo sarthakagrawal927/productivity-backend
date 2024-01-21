@@ -54,7 +54,7 @@ var (
 	TaskTypeList       = []uint{uint(Todo), uint(InProgress), uint(Done), uint(Backlog)}
 	PriorityTypeList   = []uint{uint(NoPriority), uint(LowPriority), uint(MediumPriority), uint(HighPriority)}
 	ComplexityTypeList = []uint{uint(NoComplexity), uint(LowComplexity), uint(MediumComplexity), uint(HighComplexity)}
-	JournalTypeList    = []uint{uint(Idea), uint(Gratitude), uint(MindClear), uint(DayPlanning), uint(DayWrap), uint(Event)}
+	JournalTypeList    = []uint{AllStatus, (Idea), uint(Gratitude), uint(MindClear), uint(DayPlanning), uint(DayWrap), uint(Event)}
 	HabitFreqTypeList  = []uint{uint(HabitDailyFreq), uint(HabitWeeklyFreq)}
 	HabitStatusList    = []uint{uint(HabitPaused), uint(HabitActive)}
 	HabitModeList      = []uint{uint(HabitTimeMode), uint(HabitCountMode), uint(HabitMlMode)}
