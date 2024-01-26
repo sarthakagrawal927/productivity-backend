@@ -45,8 +45,12 @@ func validateStringFromForm(c echo.Context, key string) (string, error) {
 	return validateString(key, c.FormValue(key))
 }
 
-func validateIntFromArray(status string, options []uint, extraParams ...uint) (uint, error) {
-	sanitizedStatus, err := validateInt("status", status, extraParams...)
+func validateIntFromArrayFromForm(c echo.Context, key string, options []uint, extraParams ...uint) (uint, error) {
+	return validateIntFromArray(key, c.FormValue(key), options, extraParams...)
+}
+
+func validateIntFromArray(key, status string, options []uint, extraParams ...uint) (uint, error) {
+	sanitizedStatus, err := validateInt(key, status, extraParams...)
 	if err != nil {
 		return sanitizedStatus, err
 	}
@@ -56,7 +60,7 @@ func validateIntFromArray(status string, options []uint, extraParams ...uint) (u
 	}
 
 	if !slices.Contains(options, uint(sanitizedStatus)) {
-		return sanitizedStatus, fmt.Errorf("status should be one of %v", options)
+		return sanitizedStatus, fmt.Errorf("%s should be one of %v", key, options)
 	}
 
 	return sanitizedStatus, nil

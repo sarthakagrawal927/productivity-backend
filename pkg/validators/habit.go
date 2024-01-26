@@ -26,15 +26,15 @@ func CreateHabitValidator(next echo.HandlerFunc) echo.HandlerFunc {
 			return middleware.HandleEchoError(c, err)
 		}
 
-		if habit.FrequencyType, err = validateIntFromArray(c.FormValue("frequency_type"), constants.HabitFreqTypeList); err != nil {
+		if habit.FrequencyType, err = validateIntFromArrayFromForm(c, "frequency_type", constants.HabitFreqTypeList); err != nil {
 			return middleware.HandleEchoError(c, err)
 		}
 
-		if habit.Mode, err = validateIntFromArray(c.FormValue("mode"), constants.HabitModeList); err != nil {
+		if habit.Mode, err = validateIntFromArrayFromForm(c, "mode", constants.HabitModeList); err != nil {
 			return middleware.HandleEchoError(c, err)
 		}
 
-		if habit.Status, err = validateIntFromArray(c.FormValue("status"), constants.HabitStatusList, constants.HabitActive); err != nil {
+		if habit.Status, err = validateIntFromArrayFromForm(c, "status", constants.HabitStatusList, constants.HabitActive); err != nil {
 			return middleware.HandleEchoError(c, err)
 		}
 

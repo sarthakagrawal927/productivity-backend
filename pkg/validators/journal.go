@@ -21,7 +21,7 @@ func CreateJournalValidator(next echo.HandlerFunc) echo.HandlerFunc {
 			return middleware.HandleEchoError(c, err)
 		}
 
-		if journal.Type, err = validateIntFromArray(c.FormValue("type"), constants.JournalTypeList); err != nil {
+		if journal.Type, err = validateIntFromArrayFromForm(c, "type", constants.JournalTypeList); err != nil {
 			return middleware.HandleEchoError(c, err)
 		}
 
@@ -42,7 +42,7 @@ func GetJournalValidator(next echo.HandlerFunc) echo.HandlerFunc {
 			return middleware.HandleEchoError(c, err)
 		}
 
-		journalType, err := validateIntFromArray(c.QueryParam("type"), constants.JournalTypeList, 0)
+		journalType, err := validateIntFromArray("type", c.QueryParam("type"), constants.JournalTypeList, 0)
 		if err != nil {
 			return middleware.HandleEchoError(c, err)
 		}

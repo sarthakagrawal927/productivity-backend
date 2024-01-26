@@ -28,15 +28,15 @@ func CreateTaskValidator(next echo.HandlerFunc) echo.HandlerFunc {
 			return middleware.HandleEchoError(c, err)
 		}
 
-		if task.Status, err = validateIntFromArray(c.FormValue("status"), constants.TaskTypeList, constants.Todo); err != nil {
+		if task.Status, err = validateIntFromArrayFromForm(c, "status", constants.TaskTypeList, constants.Todo); err != nil {
 			return middleware.HandleEchoError(c, err)
 		}
 
-		if task.Complexity, err = validateIntFromArray(c.FormValue("complexity"), constants.ComplexityTypeList, constants.NoComplexity); err != nil {
+		if task.Complexity, err = validateIntFromArrayFromForm(c, "complexity", constants.ComplexityTypeList, constants.NoComplexity); err != nil {
 			return middleware.HandleEchoError(c, err)
 		}
 
-		if task.Priority, err = validateIntFromArray(c.FormValue("priority"), constants.PriorityTypeList, constants.NoPriority); err != nil {
+		if task.Priority, err = validateIntFromArrayFromForm(c, "priority", constants.PriorityTypeList, constants.NoPriority); err != nil {
 			return middleware.HandleEchoError(c, err)
 		}
 
@@ -86,19 +86,19 @@ func UpdateTaskValidator(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 
 		if c.FormValue("status") != "" {
-			if updateObj["status"], err = validateIntFromArray(c.FormValue("status"), constants.TaskTypeList); err != nil {
+			if updateObj["status"], err = validateIntFromArrayFromForm(c, "status", constants.TaskTypeList); err != nil {
 				return middleware.HandleEchoError(c, err)
 			}
 		}
 
 		if c.FormValue("complexity") != "" {
-			if updateObj["complexity"], err = validateIntFromArray(c.FormValue("complexity"), constants.ComplexityTypeList); err != nil {
+			if updateObj["complexity"], err = validateIntFromArrayFromForm(c, "complexity", constants.ComplexityTypeList); err != nil {
 				return middleware.HandleEchoError(c, err)
 			}
 		}
 
 		if c.FormValue("priority") != "" {
-			if updateObj["priority"], err = validateIntFromArray(c.FormValue("priority"), constants.PriorityTypeList); err != nil {
+			if updateObj["priority"], err = validateIntFromArrayFromForm(c, "priority", constants.PriorityTypeList); err != nil {
 				return middleware.HandleEchoError(c, err)
 			}
 		}
