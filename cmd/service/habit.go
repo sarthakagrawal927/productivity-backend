@@ -37,3 +37,9 @@ func GetHabitWithLogs(c echo.Context) error {
 	queryResult = db.DB_CONNECTION.GetDB().Where("habit_id = ?", c.Get("id")).Find(&habitLog)
 	return middleware.HandleQueryResult(queryResult, c, middleware.RequestResponse{Message: "Success", Data: map[string]interface{}{"habit": habit, "logs": habitLog}}, true)
 }
+
+func CreateConsumable(c echo.Context) error {
+	consumable := c.Get("consumable").(models.Consumable)
+	queryResult := db.DB_CONNECTION.GetDB().Create(&consumable)
+	return middleware.HandleQueryResult(queryResult, c, middleware.RequestResponse{Message: "Created Successfully", Data: consumable}, false)
+}

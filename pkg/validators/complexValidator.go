@@ -1,8 +1,6 @@
 package validators
 
 import (
-	"todo/pkg/constants"
-
 	"github.com/labstack/echo/v4"
 )
 
@@ -79,37 +77,46 @@ func getValueFromSource(source string, key string, c echo.Context) string {
 	}
 }
 
-func handleValidationArray(validationArray ValidationArray, c echo.Context) error {
+func handleValidationArray(validationArray ValidationArray, c echo.Context) (map[string]interface{}, error) {
+	tempInterface := make(map[string]interface{})
+	var err error
 	for _, validationObj := range validationArray {
 		value := getValueFromSource(validationObj.Source, validationObj.Field, c)
 		switch validationObj.Kind {
 		case KIND_INT:
+			// TODO: Rewrite validateIntFromArray & validateInt to better utilize this function
 			if validationObj.ShouldBeFrom != nil && len(validationObj.ShouldBeFrom) > 0 {
-				if _, err := validateIntFromArray(validationObj.Field, value, validationObj.ShouldBeFrom, validationObj.Default); err != nil {
-					return err
+				if tempInterface[validationObj.Field],
+					err = validateIntFromArray(validationObj.Field, value, validationObj.ShouldBeFrom, validationObj.Default); err != nil {
+					return nil, err
 				}
 			} else {
-				if _, err := validateInt(validationObj.Field, value, validationObj.Default); err != nil {
-					return err
+				if validationObj.Required {
+					if tempInterface[validationObj.Field], err = validateInt(validationObj.Field, value); err != nil {
+						return nil, err
+					}
+				} else {
+					if tempInterface[validationObj.Field], err = validateInt(validationObj.Field, value, validationObj.Default); err != nil {
+						return nil, err
+					}
 				}
 			}
 
 		case KIND_STRING:
-			if _, err := validateString(validationObj.Field, value); err != nil && validationObj.Required {
-				return err
+			if tempInterface[validationObj.Field], err = validateString(validationObj.Field, value); err != nil && validationObj.Required {
+				return nil, err
 			}
 
 		case KIND_BOOL:
-			if _, err := validateBool(validationObj.Field, value); err != nil {
-				return err
+			if tempInterface[validationObj.Field], err = validateBool(validationObj.Field, value); err != nil {
+				return nil, err
 			}
 		}
 	}
-	return nil
+	return tempInterface, nil
 }
 
-// Sample validation array
-var ValidationArrayForCreateHabit = ValidationArray{
+var ValidationArrayForMeta = ValidationArray{
 	getSingleValidationObj(ValidationStruct{
 		Field:    "title",
 		Kind:     KIND_STRING,
@@ -119,29 +126,5 @@ var ValidationArrayForCreateHabit = ValidationArray{
 		Field:    "desc",
 		Kind:     KIND_STRING,
 		Required: true,
-	}),
-	getSingleValidationObj(ValidationStruct{
-		Field:    "target",
-		Required: true,
-	}),
-	getSingleValidationObj(ValidationStruct{
-		Field:        "frequency_type",
-		Required:     true,
-		ShouldBeFrom: constants.HabitFreqTypeList,
-	}),
-	getSingleValidationObj(ValidationStruct{
-		Field:        "mode",
-		Required:     true,
-		ShouldBeFrom: constants.HabitModeList,
-	}),
-	getSingleValidationObj(ValidationStruct{
-		Field:        "status",
-		Required:     true,
-		ShouldBeFrom: constants.HabitStatusList,
-	}),
-	getSingleValidationObj(ValidationStruct{
-		Field:    "anti",
-		Required: true,
-		Kind:     KIND_BOOL,
 	}),
 }

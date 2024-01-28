@@ -55,6 +55,8 @@ func CreateService() {
 	e.POST("/api/habit/log", AddHabitLog, validators.CreateHabitLogValidator)
 	e.GET("/api/habit/:id", GetHabitWithLogs, validators.GetSingleHabitValidator)
 
+	e.POST("/api/consumable", CreateConsumable, validators.CreateConsumableValidator)
+
 	e.POST("/api/admin/db_migrate", migrateDB)
 	e.POST("/api/admin/db_delete_all", deleteAllTasks)
 	e.GET("/api/admin/metrics", s.Handle)

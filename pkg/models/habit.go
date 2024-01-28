@@ -34,10 +34,10 @@ type Consumable struct {
 	HabitID uint `json:"habit_id"`
 	Meta
 
-	SmallestUnitLabel uint `json:"smallest_unit_label"` // Episode / Page
-	NumTotalUnit      uint `json:"num_total_unit"`      // 12 episodes / 100 pages
-	TimePerUnit       uint `json:"time_per_unit"`       // 20min / 5min
-	NumRemainingUnit  uint `json:"num_remaining_unit"`
+	SmallestUnitLabel string `json:"smallest_unit_label"` // Episode / Page
+	NumTotalUnit      uint   `json:"num_total_unit"`      // 12 episodes / 100 pages
+	TimePerUnit       uint   `json:"time_per_unit"`       // 20min / 5min
+	NumRemainingUnit  uint   `json:"num_remaining_unit"`
 }
 
 // can do something similar to plan out the exercises

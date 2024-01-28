@@ -78,15 +78,3 @@ func validateBool(key, value string) (bool, error) {
 
 	return sanitizedBool, nil
 }
-
-// consider making a function like this
-func validateTitleDescInterface(c echo.Context, obj interface{}) (interface{}, error) {
-	var err error
-	if obj.(map[string]interface{})["title"], err = validateStringFromForm(c, "title"); err != nil {
-		return nil, err
-	}
-	if obj.(map[string]interface{})["desc"], err = validateStringFromForm(c, "desc"); err != nil {
-		return nil, err
-	}
-	return obj, nil
-}
