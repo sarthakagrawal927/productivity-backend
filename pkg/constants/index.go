@@ -23,6 +23,7 @@ const (
 	DayPlanning
 	DayWrap
 	Event
+	FoodLog
 )
 
 const (

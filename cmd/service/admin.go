@@ -14,6 +14,7 @@ func migrateDB(c echo.Context) error {
 		&models.Task{},
 		&models.Habit{},
 		&models.HabitLog{},
+		&models.Consumable{},
 
 		&models.JournalEntry{},
 		&models.JournalPrompt{},
