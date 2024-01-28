@@ -17,8 +17,7 @@ const (
 	KIND_BOOL   = "bool"
 )
 
-type ValidationRules struct {
-}
+type ValidationRules struct{}
 
 type ValidationStruct struct {
 	Field        string `json:"field"`
