@@ -28,7 +28,7 @@ func GetJournalEntries(c echo.Context) error {
 		journalTypes = []uint{journalType}
 	}
 
-	queryResult := db.DB_CONNECTION.GetDB().Select("id", "title", "created_at").Where("type in ?", journalTypes).Limit(pagesize).Offset((pagenum - 1) * pagesize).Order(clause.OrderByColumn{Column: clause.Column{Name: "created_at"}, Desc: true}).Find(&journalEntries)
+	queryResult := db.DB_CONNECTION.GetDB().Select("id", "title", "created_at", "desc", "type").Where("type in ?", journalTypes).Limit(pagesize).Offset((pagenum - 1) * pagesize).Order(clause.OrderByColumn{Column: clause.Column{Name: "created_at"}, Desc: true}).Find(&journalEntries)
 
 	return middleware.HandleQueryResult(queryResult, c, middleware.RequestResponse{Message: "Success", Data: journalEntries}, true)
 }

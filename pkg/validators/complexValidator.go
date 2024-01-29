@@ -31,17 +31,6 @@ type ValidationStruct struct {
 
 type ValidationArray []ValidationStruct
 
-var ValidationArrayFor = ValidationArray{
-	{
-		Field:        "status",
-		Source:       "form",
-		Kind:         "int",
-		Required:     true,
-		ShouldBeFrom: []uint{},
-		Default:      0,
-	},
-}
-
 var defaultValidationObj = ValidationStruct{
 	Source:       FROM_FORM,
 	Kind:         KIND_INT,

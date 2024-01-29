@@ -10,7 +10,7 @@ const (
 )
 
 const (
-	NoPriority uint = iota + 0
+	NoPriority uint = iota + 1
 	LowPriority
 	MediumPriority
 	HighPriority
@@ -27,7 +27,7 @@ const (
 )
 
 const (
-	NoComplexity uint = iota + 0
+	NoComplexity uint = iota + 1
 	LowComplexity
 	MediumComplexity
 	HighComplexity
@@ -56,7 +56,7 @@ var (
 	PriorityTypeList   = []uint{uint(NoPriority), uint(LowPriority), uint(MediumPriority), uint(HighPriority)}
 	ComplexityTypeList = []uint{uint(NoComplexity), uint(LowComplexity), uint(MediumComplexity), uint(HighComplexity)}
 
-	JournalTypeList = []uint{AllStatus, (Idea), uint(Gratitude), uint(MindClear), uint(DayPlanning), uint(DayWrap), uint(Event)}
+	JournalTypeList = []uint{AllStatus, (Idea), uint(Gratitude), uint(MindClear), uint(DayPlanning), uint(DayWrap), uint(Event), uint(FoodLog)}
 
 	HabitFreqTypeList = []uint{uint(HabitDailyFreq), uint(HabitWeeklyFreq)}
 	HabitStatusList   = []uint{uint(HabitPaused), uint(HabitActive)}
