@@ -43,3 +43,9 @@ func CreateConsumable(c echo.Context) error {
 	queryResult := db.DB_CONNECTION.GetDB().Create(&consumable)
 	return middleware.HandleQueryResult(queryResult, c, middleware.RequestResponse{Message: "Created Successfully", Data: consumable}, false)
 }
+
+func GetConsumables(c echo.Context) error {
+	var consumables []models.Consumable
+	queryResult := db.DB_CONNECTION.GetDB().Find(&consumables)
+	return middleware.HandleQueryResult(queryResult, c, middleware.RequestResponse{Message: "Success", Data: consumables}, true)
+}
