@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -23,5 +24,6 @@ func HandleQueryResult(queryResult *gorm.DB, c echo.Context, successResponse Req
 }
 
 func HandleEchoError(c echo.Context, err error) error {
+	log.Println(err)
 	return c.JSON(http.StatusBadRequest, RequestResponse{Message: err.Error()})
 }

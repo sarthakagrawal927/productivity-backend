@@ -38,7 +38,11 @@ func CreateHabitValidator(next echo.HandlerFunc) echo.HandlerFunc {
 			return middleware.HandleEchoError(c, err)
 		}
 
-		if habit.Anti, err = validateBool("anti", c.FormValue("anti")); err != nil {
+		// if habit.Anti, err = validateBool("anti", c.FormValue("anti")); err != nil {
+		// 	return middleware.HandleEchoError(c, err)
+		// }
+
+		if habit.ApproxTimeNeeded, err = validateInt("approx_time_needed", c.FormValue("approx_time_needed")); err != nil {
 			return middleware.HandleEchoError(c, err)
 		}
 
