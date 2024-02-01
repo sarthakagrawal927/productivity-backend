@@ -2,13 +2,12 @@ package db
 
 import (
 	"fmt"
+	"os"
 	"time"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
-
-const dsn = "host=localhost user=postgres password=1234567890 dbname=moves_dev port=5432 sslmode=disable TimeZone=Asia/Shanghai"
 
 func getNewPostgresDB(url string) (*postgresStruct, error) {
 	pg := &postgresStruct{
@@ -39,7 +38,7 @@ var DB_CONNECTION *postgresStruct
 func SetupDBConnection() {
 	var err error
 	fmt.Println("[DB] Setting up database connection")
-	DB_CONNECTION, err = getNewPostgresDB(dsn)
+	DB_CONNECTION, err = getNewPostgresDB(os.Getenv("DATABASE_URL"))
 	if err != nil {
 		fmt.Println("[DB] Error setting up database connection")
 	} else {
