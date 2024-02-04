@@ -3,8 +3,8 @@ package service
 import (
 	"todo/pkg/constants"
 	db "todo/pkg/database"
-	middleware "todo/pkg/middlewares"
 	"todo/pkg/models"
+	utils "todo/pkg/utils"
 
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm/clause"
@@ -13,7 +13,7 @@ import (
 func AddJournalEntry(c echo.Context) error {
 	journal := c.Get("journal").(models.JournalEntry)
 	queryResult := db.DB_CONNECTION.GetDB().Create(&journal)
-	return middleware.HandleQueryResult(queryResult, c, middleware.RequestResponse{Message: "Created Successfully", Data: journal}, false)
+	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Created Successfully", Data: journal}, false)
 }
 
 func GetJournalEntries(c echo.Context) error {
@@ -30,12 +30,12 @@ func GetJournalEntries(c echo.Context) error {
 
 	queryResult := db.DB_CONNECTION.GetDB().Select("id", "title", "created_at", "desc", "type").Where("type in ?", journalTypes).Limit(pagesize).Offset((pagenum - 1) * pagesize).Order(clause.OrderByColumn{Column: clause.Column{Name: "created_at"}, Desc: true}).Find(&journalEntries)
 
-	return middleware.HandleQueryResult(queryResult, c, middleware.RequestResponse{Message: "Success", Data: journalEntries}, true)
+	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Success", Data: journalEntries}, true)
 }
 
 func GetJournalEntry(c echo.Context) error {
 	var journalEntry models.JournalEntry
 	id := c.Param("id")
 	queryResult := db.DB_CONNECTION.GetDB().Where("id = ?", id).First(&journalEntry)
-	return middleware.HandleQueryResult(queryResult, c, middleware.RequestResponse{Message: "Success", Data: journalEntry}, false)
+	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Success", Data: journalEntry}, false)
 }

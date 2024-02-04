@@ -2,8 +2,8 @@ package service
 
 import (
 	db "todo/pkg/database"
-	middleware "todo/pkg/middlewares"
 	"todo/pkg/models"
+	utils "todo/pkg/utils"
 
 	"github.com/labstack/echo/v4"
 )
@@ -11,13 +11,13 @@ import (
 func CreateHabit(c echo.Context) error {
 	habit := c.Get("habit").(models.Habit)
 	queryResult := db.DB_CONNECTION.GetDB().Create(&habit)
-	return middleware.HandleQueryResult(queryResult, c, middleware.RequestResponse{Message: "Created Successfully", Data: habit}, false)
+	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Created Successfully", Data: habit}, false)
 }
 
 func GetHabits(c echo.Context) error {
 	var habits []models.Habit
 	queryResult := db.DB_CONNECTION.GetDB().Find(&habits)
-	return middleware.HandleQueryResult(queryResult, c, middleware.RequestResponse{Message: "Success", Data: habits}, true)
+	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Success", Data: habits}, true)
 }
 
 func AddHabitLog(c echo.Context) error {
@@ -32,20 +32,20 @@ func GetHabitWithLogs(c echo.Context) error {
 	var habitLog []models.HabitLog // Add type []models.HabitLog
 	queryResult := db.DB_CONNECTION.GetDB().Where("id = ?", c.Get("id")).First(&habit)
 	if queryResult.Error != nil {
-		return middleware.HandleQueryResult(queryResult, c, middleware.RequestResponse{Message: "Habit not found", Data: habit}, false)
+		return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Habit not found", Data: habit}, false)
 	}
 	queryResult = db.DB_CONNECTION.GetDB().Where("habit_id = ?", c.Get("id")).Find(&habitLog)
-	return middleware.HandleQueryResult(queryResult, c, middleware.RequestResponse{Message: "Success", Data: map[string]interface{}{"habit": habit, "logs": habitLog}}, true)
+	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Success", Data: map[string]interface{}{"habit": habit, "logs": habitLog}}, true)
 }
 
 func CreateConsumable(c echo.Context) error {
 	consumable := c.Get("consumable").(models.Consumable)
 	queryResult := db.DB_CONNECTION.GetDB().Create(&consumable)
-	return middleware.HandleQueryResult(queryResult, c, middleware.RequestResponse{Message: "Created Successfully", Data: consumable}, false)
+	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Created Successfully", Data: consumable}, false)
 }
 
 func GetConsumables(c echo.Context) error {
 	var consumables []models.Consumable
 	queryResult := db.DB_CONNECTION.GetDB().Find(&consumables)
-	return middleware.HandleQueryResult(queryResult, c, middleware.RequestResponse{Message: "Success", Data: consumables}, true)
+	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Success", Data: consumables}, true)
 }

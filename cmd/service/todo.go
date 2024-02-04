@@ -2,8 +2,8 @@ package service
 
 import (
 	db "todo/pkg/database"
-	validators "todo/pkg/middlewares"
 	"todo/pkg/models"
+	validators "todo/pkg/utils"
 
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"

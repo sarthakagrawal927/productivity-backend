@@ -1,8 +1,8 @@
 package validators
 
 import (
-	middleware "todo/pkg/middlewares"
 	"todo/pkg/models"
+	utils "todo/pkg/utils"
 
 	"github.com/labstack/echo/v4"
 )
@@ -45,7 +45,7 @@ func CreateConsumableValidator(next echo.HandlerFunc) echo.HandlerFunc {
 		completeValidationArray := append(ValidationArrayForCreateConsumable, ValidationArrayForMeta...)
 		objMap, err := handleValidationArray(completeValidationArray, c)
 		if err != nil {
-			return middleware.HandleEchoError(c, err)
+			return utils.HandleEchoError(c, err)
 		}
 		c.Set("consumable", models.Consumable{
 			HabitID: objMap["habit_id"].(uint),
