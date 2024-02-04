@@ -4,6 +4,7 @@ const AllStatus uint = 0
 
 const (
 	Todo uint = 1 + iota
+	// Scheduled
 	InProgress
 	Done
 	Backlog
@@ -26,11 +27,12 @@ const (
 	FoodLog
 )
 
+// as it is hard to predict the time a particular task will take, basing it on complexity
 const (
-	NoComplexity uint = iota + 1
-	LowComplexity
-	MediumComplexity
-	HighComplexity
+	NoComplexity     uint = iota + 1 // 15min
+	LowComplexity                    // 30min
+	MediumComplexity                 // 60min
+	HighComplexity                   // 120min
 )
 
 const (
@@ -61,4 +63,11 @@ var (
 	HabitFreqTypeList = []uint{uint(HabitDailyFreq), uint(HabitWeeklyFreq)}
 	HabitStatusList   = []uint{uint(HabitPaused), uint(HabitActive)}
 	HabitModeList     = []uint{uint(HabitTimeMode), uint(HabitCountMode), uint(HabitMlMode)}
+)
+
+const (
+	ENTITY_TASK    uint = iota + 1
+	ENTITY_HABIT        // 2
+	ENTITY_PROJECT      // 3
+	ENTITY_GOAL         // 4
 )
