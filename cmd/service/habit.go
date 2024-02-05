@@ -23,7 +23,7 @@ func GetHabits(c echo.Context) error {
 func AddHabitLog(c echo.Context) error {
 	habitLog := c.Get("habit_log").(models.HabitLog)
 	queryResult := db.DB_CONNECTION.GetDB().Create(&habitLog)
-	return queryResult.Error
+	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Created Successfully", Data: habitLog}, false)
 }
 
 // to be improved a lot
