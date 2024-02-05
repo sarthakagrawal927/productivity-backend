@@ -75,7 +75,7 @@ func CreateHabitLogValidator(next echo.HandlerFunc) echo.HandlerFunc {
 			return utils.HandleEchoError(c, err)
 		}
 
-		if habitLog.Date, err = time.Parse("YYYY-MM-DD", stringDate); err != nil {
+		if habitLog.Date, err = time.Parse("2006-01-02T15:04:05.999Z07:00", stringDate); err != nil {
 			return utils.HandleEchoError(c, err)
 		}
 
