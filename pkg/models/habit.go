@@ -24,6 +24,7 @@ type HabitLog struct {
 	HabitID     uint           `json:"habit_id"`
 	ResultCount uint           `json:"result_count"`
 	ResultDate  datatypes.Date `json:"result_time"`
+	gorm.Model
 }
 
 // TV Series, Movies, Books, etc. With this you can choose how much time you want to spend on your habit and it will let you know what you can watch
