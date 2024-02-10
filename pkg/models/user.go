@@ -30,3 +30,14 @@ type User struct {
 	PasswordAntiHabits string         `json:"password_anti_habits"`
 	gorm.Model
 }
+type Relationship struct {
+	UserId uint `json:"user_id"`
+
+	// RelatedPersonId  uint           `json:"related_person_id"` in future to replace name & photoUrl
+	Name     string `json:"name"`
+	PhotoUrl string `json:"photo_url"`
+
+	ElectronBand     uint           `json:"electron_band"`
+	ContactFrequency uint           `json:"contact_frequency"`
+	LastContactTime  datatypes.Date `json:"last_contact_time"`
+}
