@@ -7,6 +7,7 @@ import (
 	utils "todo/pkg/utils"
 
 	"github.com/labstack/echo/v4"
+	"gorm.io/datatypes"
 )
 
 func CreateHabitValidator(next echo.HandlerFunc) echo.HandlerFunc {
@@ -38,9 +39,9 @@ func CreateHabitValidator(next echo.HandlerFunc) echo.HandlerFunc {
 			return utils.HandleEchoError(c, err)
 		}
 
-		// if habit.Anti, err = validateBool("anti", c.FormValue("anti")); err != nil {
-		// 	return utils.HandleEchoError(c, err)
-		// }
+		if habit.Anti, err = validateBool("anti", c.FormValue("anti")); err != nil {
+			return utils.HandleEchoError(c, err)
+		}
 
 		if habit.ApproxTimeNeeded, err = validateInt("approx_time_needed", c.FormValue("approx_time_needed")); err != nil {
 			return utils.HandleEchoError(c, err)
@@ -71,12 +72,14 @@ func CreateHabitLogValidator(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 
 		var stringDate string
-		if stringDate, err = validateStringFromForm(c, "date"); err != nil {
+		if stringDate, err = validateStringFromForm(c, "result_date"); err != nil {
 			return utils.HandleEchoError(c, err)
 		}
 
-		if habitLog.Date, err = time.Parse("2006-01-02T15:04:05.999Z07:00", stringDate); err != nil {
+		if dateTimeVal, err := time.Parse("2006-01-02T15:04:05.999Z07:00", stringDate); err != nil {
 			return utils.HandleEchoError(c, err)
+		} else {
+			habitLog.ResultDate = datatypes.Date(dateTimeVal)
 		}
 
 		c.Set("habit_log", habitLog)

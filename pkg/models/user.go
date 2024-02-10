@@ -1,12 +1,11 @@
 package models
 
 import (
-	"time"
-
+	"gorm.io/datatypes"
 	"gorm.io/gorm"
 )
 
-type TimeType time.Time
+type TimeType datatypes.Time
 
 type TimePeriod struct {
 	StartTime TimeType `json:"start_time,omitempty"`
@@ -22,10 +21,12 @@ type Activity struct {
 
 // Thinking of storing this in mongoDB.
 type User struct {
+	Email              string         `json:"email"`
+	FullName           string         `json:"full_name"`
+	SleepStartTime     datatypes.Time `json:"sleep_start_time"`
+	SleepEndTime       datatypes.Time `json:"sleep_end_time"`
+	WorkStartTime      datatypes.Time `json:"work_start_time"`
+	WorkEndTime        datatypes.Time `json:"work_end_time"`
+	PasswordAntiHabits string         `json:"password_anti_habits"`
 	gorm.Model
-	Email          string     `json:"email"`
-	FullName       string     `json:"full_name"`
-	SleepSchedule  TimePeriod `json:"sleep_schedule"`
-	OfficeSchedule TimePeriod `json:"office_schedule"`
-	Activities     []Activity `json:"activities"`
 }
