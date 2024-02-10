@@ -53,7 +53,7 @@ func CreateService() {
 	e.POST("/api/habit", CreateHabit, validators.CreateHabitValidator)
 	e.GET("/api/habit", GetHabits, validators.GetHabitsValidator)
 	e.POST("/api/habit/log", AddHabitLog, validators.CreateHabitLogValidator)
-	e.GET("/api/habit/:id", GetHabitWithLogs, validators.GetSingleHabitValidator)
+	e.GET("/api/habit/logs/:id", GetHabitWithLogs, validators.GetSingleHabitValidator)
 
 	e.POST("/api/consumable", CreateConsumable, validators.CreateConsumableValidator)
 	e.GET("/api/consumable", GetConsumables)
