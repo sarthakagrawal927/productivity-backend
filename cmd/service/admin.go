@@ -10,6 +10,7 @@ import (
 func migrateDB(c echo.Context) error {
 	err := db.DB_CONNECTION.GetDB().AutoMigrate(
 		&models.User{},
+		&models.Relationship{},
 
 		&models.Task{},
 		&models.Habit{},
