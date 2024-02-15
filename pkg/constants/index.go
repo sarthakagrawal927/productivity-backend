@@ -38,6 +38,7 @@ const (
 const (
 	HabitDailyFreq uint = iota + 1
 	HabitWeeklyFreq
+	HabitMonthlyFreq
 )
 
 const (
@@ -60,7 +61,7 @@ var (
 
 	JournalTypeList = []uint{AllStatus, (Idea), uint(Gratitude), uint(MindClear), uint(DayPlanning), uint(DayWrap), uint(Event), uint(FoodLog)}
 
-	HabitFreqTypeList = []uint{uint(HabitDailyFreq), uint(HabitWeeklyFreq)}
+	HabitFreqTypeList = []uint{uint(HabitDailyFreq), uint(HabitWeeklyFreq), uint(HabitMonthlyFreq)}
 	HabitStatusList   = []uint{uint(HabitPaused), uint(HabitActive)}
 	HabitModeList     = []uint{uint(HabitTimeMode), uint(HabitCountMode), uint(HabitMlMode)}
 )
