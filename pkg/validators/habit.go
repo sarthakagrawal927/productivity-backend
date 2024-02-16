@@ -82,6 +82,8 @@ func CreateHabitLogValidator(next echo.HandlerFunc) echo.HandlerFunc {
 			habitLog.ResultDate = datatypes.Date(dateTimeVal)
 		}
 
+		habitLog.Comment, _ = validateStringFromForm(c, "comment")
+
 		c.Set("habit_log", habitLog)
 		return next(c)
 	}
