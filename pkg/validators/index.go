@@ -41,6 +41,7 @@ func validateString(key, value string) (string, error) {
 	return value, nil
 }
 
+// TODO: have ability to make string optional and check for length
 func validateStringFromForm(c echo.Context, key string) (string, error) {
 	return validateString(key, c.FormValue(key))
 }

@@ -24,6 +24,11 @@ type HabitLog struct {
 	HabitID     uint           `json:"habit_id"`
 	ResultCount uint           `json:"result_count"`
 	ResultDate  datatypes.Date `json:"result_time"`
+	Comment     string         `json:"comment"`
+
+	// Decide whether you want to somewhere like toggl route or just make the schedule for user
+	// StartTime   datatypes.Time `json:"start_time"`
+	// EndTime     datatypes.Time `json:"end_time"`
 	gorm.Model
 }
 

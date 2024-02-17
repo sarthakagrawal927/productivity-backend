@@ -41,6 +41,8 @@ func CreateService() {
 		})
 	})
 
+	e.GET("/api/user/today/logs", GetDailyLogs)
+
 	e.POST("/api/todo", CreateTodo, validators.CreateTaskValidator)
 	e.GET("/api/todo", GetTodo, validators.GetTasksValidator)
 	e.DELETE("/api/todo", DeleteTodo, validators.DeleteTaskValidator)
