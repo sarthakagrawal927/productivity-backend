@@ -25,6 +25,7 @@ const (
 	DayWrap
 	Event
 	FoodLog
+	HighlightOfTheDay
 )
 
 const (
@@ -50,7 +51,11 @@ var (
 	TaskTypeList     = []uint{uint(Todo), uint(InProgress), uint(Done), uint(Backlog)}
 	PriorityTypeList = []uint{uint(NoPriority), uint(LowPriority), uint(MediumPriority), uint(HighPriority)}
 
-	JournalTypeList = []uint{AllStatus, (Idea), uint(Gratitude), uint(MindClear), uint(DayPlanning), uint(DayWrap), uint(Event), uint(FoodLog)}
+	JournalTypeList = []uint{
+		AllStatus, uint(Idea), uint(Gratitude),
+		uint(MindClear), uint(DayPlanning), uint(DayWrap),
+		uint(Event), uint(FoodLog), uint(HighlightOfTheDay),
+	}
 
 	HabitFreqTypeList = []uint{uint(HabitDailyFreq), uint(HabitWeeklyFreq), uint(HabitMonthlyFreq)}
 	HabitStatusList   = []uint{uint(HabitArchived), uint(HabitActive)}
