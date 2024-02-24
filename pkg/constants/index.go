@@ -27,14 +27,6 @@ const (
 	FoodLog
 )
 
-// as it is hard to predict the time a particular task will take, basing it on complexity
-const (
-	NoComplexity     uint = iota + 1 // 15min
-	LowComplexity                    // 30min
-	MediumComplexity                 // 60min
-	HighComplexity                   // 120min
-)
-
 const (
 	HabitDailyFreq uint = iota + 1
 	HabitWeeklyFreq
@@ -55,9 +47,8 @@ const (
 const DefaultPageSize = 20
 
 var (
-	TaskTypeList       = []uint{uint(Todo), uint(InProgress), uint(Done), uint(Backlog)}
-	PriorityTypeList   = []uint{uint(NoPriority), uint(LowPriority), uint(MediumPriority), uint(HighPriority)}
-	ComplexityTypeList = []uint{uint(NoComplexity), uint(LowComplexity), uint(MediumComplexity), uint(HighComplexity)}
+	TaskTypeList     = []uint{uint(Todo), uint(InProgress), uint(Done), uint(Backlog)}
+	PriorityTypeList = []uint{uint(NoPriority), uint(LowPriority), uint(MediumPriority), uint(HighPriority)}
 
 	JournalTypeList = []uint{AllStatus, (Idea), uint(Gratitude), uint(MindClear), uint(DayPlanning), uint(DayWrap), uint(Event), uint(FoodLog)}
 

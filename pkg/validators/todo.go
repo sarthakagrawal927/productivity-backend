@@ -32,11 +32,15 @@ func CreateTaskValidator(next echo.HandlerFunc) echo.HandlerFunc {
 			return utils.HandleEchoError(c, err)
 		}
 
-		if task.Complexity, err = validateIntFromArrayFromForm(c, "complexity", constants.ComplexityTypeList, constants.NoComplexity); err != nil {
+		if task.TimeToSpend, err = validateInt("time_to_spend", c.FormValue("time_to_spend"), 0); err != nil {
 			return utils.HandleEchoError(c, err)
 		}
 
 		if task.Priority, err = validateIntFromArrayFromForm(c, "priority", constants.PriorityTypeList, constants.NoPriority); err != nil {
+			return utils.HandleEchoError(c, err)
+		}
+
+		if task.Deadline, err = validateDate("due_date", c.FormValue("due_date")); err != nil {
 			return utils.HandleEchoError(c, err)
 		}
 
@@ -87,12 +91,6 @@ func UpdateTaskValidator(next echo.HandlerFunc) echo.HandlerFunc {
 
 		if c.FormValue("status") != "" {
 			if updateObj["status"], err = validateIntFromArrayFromForm(c, "status", constants.TaskTypeList); err != nil {
-				return utils.HandleEchoError(c, err)
-			}
-		}
-
-		if c.FormValue("complexity") != "" {
-			if updateObj["complexity"], err = validateIntFromArrayFromForm(c, "complexity", constants.ComplexityTypeList); err != nil {
 				return utils.HandleEchoError(c, err)
 			}
 		}

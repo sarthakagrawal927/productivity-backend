@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"slices"
 	"strconv"
+	"time"
 
 	"github.com/labstack/echo/v4"
+	"gorm.io/datatypes"
 )
 
 /*
@@ -78,4 +80,18 @@ func validateBool(key, value string) (bool, error) {
 	}
 
 	return sanitizedBool, nil
+}
+
+func validateDate(key, value string) (datatypes.Date, error) {
+	var stringDate string
+	var err error
+	if stringDate, err = validateString(key, value); err != nil {
+		return datatypes.Date{}, err
+	}
+
+	if dateTimeVal, err := time.Parse("1/2/2006", stringDate); err != nil {
+		return datatypes.Date{}, err
+	} else {
+		return datatypes.Date(dateTimeVal), nil
+	}
 }
