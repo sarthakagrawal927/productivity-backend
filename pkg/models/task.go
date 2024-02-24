@@ -12,11 +12,11 @@ type Meta struct {
 
 type Task struct {
 	Meta
-	UserId      uint           `json:"user_id"`
-	Status      uint           `json:"status"`
-	Priority    uint           `json:"priority"`
-	TimeToSpend uint           `json:"time_to_spend"`
-	Deadline    datatypes.Date `json:"deadline"`
+	UserId      uint            `json:"user_id"`
+	Status      uint            `json:"status"`
+	Priority    uint            `json:"priority"`
+	TimeToSpend uint            `json:"time_to_spend"`
+	Deadline    *datatypes.Date `json:"deadline"`
 	// SourceEntity uint          `json:"source"` // can be project or regular task
 	// SourceId     uint          `json:"source_id"`
 	// TagIds pq.Int64Array `gorm:"type:integer[]" json:"tag_ids"`

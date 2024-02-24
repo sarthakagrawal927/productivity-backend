@@ -40,8 +40,9 @@ func CreateTaskValidator(next echo.HandlerFunc) echo.HandlerFunc {
 			return utils.HandleEchoError(c, err)
 		}
 
-		if task.Deadline, err = validateDate("due_date", c.FormValue("due_date")); err != nil {
-			return utils.HandleEchoError(c, err)
+		taskDeadline, err := validateDate("deadline", c.FormValue("deadline"))
+		if err == nil {
+			task.Deadline = &taskDeadline
 		}
 
 		task.Desc = c.FormValue("desc")
