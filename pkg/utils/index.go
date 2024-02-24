@@ -3,6 +3,7 @@ package utils
 import (
 	"log"
 	"net/http"
+	"sync"
 
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
@@ -26,4 +27,9 @@ func HandleQueryResult(queryResult *gorm.DB, c echo.Context, successResponse Req
 func HandleEchoError(c echo.Context, err error) error {
 	log.Println(err)
 	return c.JSON(http.StatusBadRequest, RequestResponse{Message: err.Error()})
+}
+
+func FetchDataAsync(slice interface{}, dbInstance *gorm.DB, wg *sync.WaitGroup) {
+	defer wg.Done()
+	dbInstance.Find(slice)
 }
