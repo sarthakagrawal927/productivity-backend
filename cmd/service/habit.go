@@ -1,6 +1,7 @@
 package service
 
 import (
+	"todo/cmd/dao"
 	db "todo/pkg/database"
 	"todo/pkg/models"
 	utils "todo/pkg/utils"
@@ -23,13 +24,22 @@ func GetHabits(c echo.Context) error {
 func AddHabitLog(c echo.Context) error {
 	habitLog := c.Get("habit_log").(models.HabitLog)
 	queryResult := db.DB_CONNECTION.GetDB().Create(&habitLog)
+	if err := updateHabitUsage(habitLog.HabitID); err != nil {
+		return utils.HandleEchoError(c, err)
+	}
 	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Created Successfully", Data: habitLog}, false)
+}
+
+// will also need to add CRON to update habit usage
+func updateHabitUsage(habitId uint) error {
+	queryResult := db.DB_CONNECTION.GetDB().Exec(dao.UpdateHabitFromLogs, habitId)
+	return queryResult.Error
 }
 
 // to be improved a lot
 func GetHabitWithLogs(c echo.Context) error {
 	var habit models.Habit
-	var habitLog []models.HabitLog // Add type []models.HabitLog
+	var habitLog []models.HabitLog
 	queryResult := db.DB_CONNECTION.GetDB().Where("id = ?", c.Get("id")).First(&habit)
 	if queryResult.Error != nil {
 		return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Habit not found", Data: habit}, false)

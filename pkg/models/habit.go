@@ -18,7 +18,7 @@ type Habit struct {
 
 	ExistingUsage uint `json:"existing_usage"` // based on frequency type update this, to handle multiple logs, insert the log then based on freq update
 	CurrentStreak uint `json:"current_streak"` // whenever log is added update this as well
-	MaxStreak     uint `json:"max_streak"`
+	// MaxStreak     uint `json:"max_streak"`
 	gorm.Model
 }
 

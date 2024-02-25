@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"sync"
+	"todo/pkg/constants"
 
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
@@ -32,4 +33,18 @@ func HandleEchoError(c echo.Context, err error) error {
 func FetchDataAsync(slice interface{}, dbInstance *gorm.DB, wg *sync.WaitGroup) {
 	defer wg.Done()
 	dbInstance.Find(slice)
+}
+
+// maybe usable in future
+func getDaysCountForHabitFreq(habitFreq uint) int {
+	switch habitFreq {
+	case constants.HabitDailyFreq:
+		return 1
+	case constants.HabitWeeklyFreq:
+		return 7
+	case constants.HabitMonthlyFreq:
+		return 30
+	default:
+		return 1
+	}
 }
