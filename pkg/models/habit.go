@@ -10,7 +10,7 @@ type Habit struct {
 	Meta
 
 	Anti             bool `json:"anti"`
-	FrequencyType    uint `json:"frequency_type"`     // 1 - Daily, 2 - Weekly
+	FrequencyType    uint `json:"frequency_type"`     // 1 - Daily, 2 - Weekly, 3 - Monthly
 	Target           uint `json:"target"`             // Limit in case of anti
 	Mode             uint `json:"mode"`               // Times, Minutes etc.
 	ApproxTimeNeeded uint `json:"approx_time_needed"` // time taken in one instance, needed for count mode to make schedule

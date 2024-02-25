@@ -35,9 +35,10 @@ func GetDailyLogs(c echo.Context) error {
 }
 
 func GetTodaySchedule(c echo.Context) error {
-	formattedSchedule, schedule := getFormattedSchedule()
+	formattedSchedule, schedule, taskEntries := getFormattedSchedule()
 	return c.JSON(http.StatusOK, utils.RequestResponse{Message: "Success", Data: map[string]interface{}{
 		"formatted_schedule": formattedSchedule,
 		"schedule":           schedule,
+		"task_entries":       taskEntries,
 	}})
 }
