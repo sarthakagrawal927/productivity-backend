@@ -13,8 +13,8 @@ import (
 )
 
 type HourMinute struct {
-	Hour   int
-	Minute int
+	Hour   int `json:"hour"`
+	Minute int `json:"minute"`
 }
 
 type ScheduleEntry struct {
