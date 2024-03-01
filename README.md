@@ -8,8 +8,12 @@
 
 ## URLS
 
+https://github.com/golang-jwt/jwt
+
 https://developers.google.com/calendar/api/quickstart/go
 
 https://github.com/search?q=google.golang.org%2Fapi%2Fcalendar%2Fv3+language%3AGo&type=code
 
+## command to generate secretKey in ubuntu
 
+openssl rand -base64 32 > secret_key.txt

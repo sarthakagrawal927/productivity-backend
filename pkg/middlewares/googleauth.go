@@ -12,9 +12,9 @@ import (
 
 // Replace with your actual secret key and Google OAuth configuration
 const (
-	secretKey    = "your-secret-key"
-	clientID     = "your-google-client-id"
-	clientSecret = "your-google-client-secret"
+	secretKey    = "zB0hWWCEcG5lqu2LDQx4FbWyRwEE8PNQgpvGqCD+no0="
+	clientID     = "616778546290-pk54dktkqqsno31b418bclt7lhfga8oq.apps.googleusercontent.com"
+	clientSecret = "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"
 )
 
 type User struct {
