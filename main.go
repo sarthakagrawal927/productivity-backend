@@ -43,8 +43,11 @@ func validateJWT(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Return your secret key (replace with your actual secret)
-		return []byte("zB0hWWCEcG5lqu2LDQx4FbWyRwEE8PNQgpvGqCD+no0="), nil
+		return []byte("simple"), nil
 	})
+
+	fmt.Println(tokenString)
+	fmt.Println(token)
 
 	// Handle any errors during parsing
 	if err != nil {
@@ -52,7 +55,7 @@ func validateJWT(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Invalid signature", http.StatusUnauthorized)
 			return
 		}
-		http.Error(w, fmt.Sprintf("Error parsing JWT: %v", err), http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf("Error parsing JWT duttaani , yeh sahi musibat hai: %v", err), http.StatusBadRequest)
 		return
 	}
 
