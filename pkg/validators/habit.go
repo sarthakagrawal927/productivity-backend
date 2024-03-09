@@ -1,13 +1,11 @@
 package validators
 
 import (
-	"time"
 	"todo/pkg/constants"
 	"todo/pkg/models"
 	utils "todo/pkg/utils"
 
 	"github.com/labstack/echo/v4"
-	"gorm.io/datatypes"
 )
 
 func CreateHabitValidator(next echo.HandlerFunc) echo.HandlerFunc {
@@ -71,15 +69,8 @@ func CreateHabitLogValidator(next echo.HandlerFunc) echo.HandlerFunc {
 			return utils.HandleEchoError(c, err)
 		}
 
-		var stringDate string
-		if stringDate, err = validateStringFromForm(c, "result_date"); err != nil {
+		if habitLog.ResultDate, err = validateDate("result_date", c.FormValue("result_date")); err != nil {
 			return utils.HandleEchoError(c, err)
-		}
-
-		if dateTimeVal, err := time.Parse("1/2/2006", stringDate); err != nil {
-			return utils.HandleEchoError(c, err)
-		} else {
-			habitLog.ResultDate = datatypes.Date(dateTimeVal)
 		}
 
 		habitLog.Comment, _ = validateStringFromForm(c, "comment")

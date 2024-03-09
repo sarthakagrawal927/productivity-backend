@@ -42,6 +42,7 @@ func CreateService() {
 	})
 
 	e.GET("/api/user/today/logs", GetDailyLogs)
+	e.GET("/api/user/today/schedule", GetTodaySchedule)
 
 	e.POST("/api/todo", CreateTodo, validators.CreateTaskValidator)
 	e.GET("/api/todo", GetTodo, validators.GetTasksValidator)
@@ -50,10 +51,12 @@ func CreateService() {
 
 	e.POST("/api/journal", AddJournalEntry, validators.CreateJournalValidator)
 	e.GET("/api/journal", GetJournalEntries, validators.GetJournalValidator)
+
 	e.GET("/api/journal/:id", GetJournalEntry, validators.GetJournalEntryValidator)
 
 	e.POST("/api/habit", CreateHabit, validators.CreateHabitValidator)
 	e.GET("/api/habit", GetHabits, validators.GetHabitsValidator)
+
 	e.POST("/api/habit/log", AddHabitLog, validators.CreateHabitLogValidator)
 	e.GET("/api/habit/logs/:id", GetHabitWithLogs, validators.GetSingleHabitValidator)
 

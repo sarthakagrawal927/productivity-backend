@@ -3,6 +3,7 @@ package utils
 import (
 	"log"
 	"net/http"
+	"todo/pkg/constants"
 
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
@@ -26,4 +27,18 @@ func HandleQueryResult(queryResult *gorm.DB, c echo.Context, successResponse Req
 func HandleEchoError(c echo.Context, err error) error {
 	log.Println(err)
 	return c.JSON(http.StatusBadRequest, RequestResponse{Message: err.Error()})
+}
+
+// maybe usable in future
+func getDaysCountForHabitFreq(habitFreq uint) int {
+	switch habitFreq {
+	case constants.HabitDailyFreq:
+		return 1
+	case constants.HabitWeeklyFreq:
+		return 7
+	case constants.HabitMonthlyFreq:
+		return 30
+	default:
+		return 1
+	}
 }
