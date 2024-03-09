@@ -1,6 +1,7 @@
 package service
 
 import (
+	"net/http"
 	"time"
 	db "todo/pkg/database"
 	utils "todo/pkg/utils"
@@ -31,4 +32,13 @@ func GetDailyLogs(c echo.Context) error {
 
 	queryResult := db.DB_CONNECTION.GetDB().Table("habit_logs").Select("habit_logs.*, habits.mode, habits.frequency_type, habits.title").Joins("LEFT JOIN habits on habits.id = habit_logs.habit_id").Where("habit_logs.result_date IN (?, ?)", formattedTodayDate, formattedYesterdayDate).Scan(&habitLog)
 	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Success", Data: habitLog}, true)
+}
+
+func GetTodaySchedule(c echo.Context) error {
+	formattedSchedule, schedule, taskEntries := getFormattedSchedule()
+	return c.JSON(http.StatusOK, utils.RequestResponse{Message: "Success", Data: map[string]interface{}{
+		"formatted_schedule": formattedSchedule,
+		"schedule":           schedule,
+		"task_entries":       taskEntries,
+	}})
 }

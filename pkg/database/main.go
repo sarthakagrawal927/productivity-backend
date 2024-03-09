@@ -37,7 +37,7 @@ var DB_CONNECTION *postgresStruct
 
 func SetupDBConnection() {
 	var err error
-	fmt.Println("[DB] Setting up database connection")
+	fmt.Println("[DB] Setting up database connection to URL: ", os.Getenv("DATABASE_URL"))
 	DB_CONNECTION, err = getNewPostgresDB(os.Getenv("DATABASE_URL"))
 	if err != nil {
 		fmt.Println("[DB] Error setting up database connection")

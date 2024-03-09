@@ -83,3 +83,16 @@ WHERE
 ```
 
 Because of complexity, currently considering to stop maintaining maxStreak. Will consider some more novel solution for it later on.
+
+- To select partial fields in golang, you can either make the optional parameters as pointers to make them nullable or create separate sub structs for each use case.
+```go
+// can consider optimizations like this in future
+type HabitForCompute struct {
+	ID               uint `json:"id"`
+	Mode             uint `json:"mode"`
+	FrequencyType    uint `json:"frequency_type"`
+	Target           uint `json:"target"`
+	ExistingUsage    uint `json:"existing_usage"`
+	ApproxTimeNeeded uint `json:"approx_time_needed"`
+}
+```

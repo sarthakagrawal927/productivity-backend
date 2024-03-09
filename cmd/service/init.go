@@ -42,6 +42,7 @@ func CreateService() {
 	})
 
 	e.GET("/api/user/today/logs", GetDailyLogs)
+	e.GET("/api/user/today/schedule", GetTodaySchedule)
 
 	e.POST("/api/todo", CreateTodo, validators.CreateTaskValidator)
 	e.GET("/api/todo", GetTodo, validators.GetTasksValidator)
