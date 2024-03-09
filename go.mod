@@ -1,6 +1,6 @@
 module todo
 
-go 1.21.0
+go 1.21
 
 require (
 	github.com/clerkinc/clerk-sdk-go v1.49.0
