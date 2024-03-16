@@ -1,13 +1,13 @@
 module todo
 
-go 1.21.0
+go 1.21
 
 require (
 	github.com/clerkinc/clerk-sdk-go v1.49.0
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.11.2
-	github.com/lib/pq v1.10.9
 	go.uber.org/zap v1.26.0
+	gorm.io/datatypes v1.2.0
 	gorm.io/driver/postgres v1.5.4
 	gorm.io/gorm v1.25.5
 )
