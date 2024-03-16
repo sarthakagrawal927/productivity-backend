@@ -2,7 +2,6 @@ package db
 
 import (
 	"fmt"
-	"os"
 	"time"
 
 	"gorm.io/driver/postgres"
@@ -37,6 +36,7 @@ var DB_CONNECTION *postgresStruct
 
 func SetupDBConnection() {
 	var err error
+
 	fmt.Println("[DB] Setting up database connection to URL: ", os.Getenv("DATABASE_URL"))
 	DB_CONNECTION, err = getNewPostgresDB(os.Getenv("DATABASE_URL"))
 	if err != nil {
