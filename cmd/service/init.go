@@ -3,6 +3,7 @@ package service
 import (
 	"net/http"
 	"todo/pkg/metrics"
+	oauth "todo/pkg/oauth"
 	validators "todo/pkg/validators"
 
 	"github.com/labstack/echo/v4"
@@ -67,6 +68,12 @@ func CreateService() {
 	e.POST("/api/admin/db_delete_all", deleteAllTasks)
 	e.GET("/api/admin/metrics", s.Handle)
 	e.POST("/api/admin/db_seed", seedTasks)
+
+	//auth changes
+
+	e.POST("/api/auth/jwt_validate", oauth.ValidateJWT)
+
+	//auth changes end
 
 	e.Logger.Fatal(e.Start(":1323"))
 }
