@@ -25,7 +25,7 @@ type HabitLogWithHabitType struct {
 }
 
 func GetDailyLogs(c echo.Context) error {
-	var habitLog []HabitLogWithHabitType
+	var habitLog []HabitLogWithHabitType = []HabitLogWithHabitType{}
 	currentTime := time.Now()
 	formattedTodayDate := currentTime.Format("2006-01-02 15:04:05")
 	formattedYesterdayDate := currentTime.AddDate(0, 0, -1).Format("2006-01-02 15:04:05")
