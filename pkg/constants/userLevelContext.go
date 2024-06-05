@@ -1,6 +1,9 @@
 package constants
 
-import "todo/pkg/types"
+import (
+	"todo/pkg/models"
+	"todo/pkg/types"
+)
 
 // values in this file are only till user is not created
 var SleepSchedule = types.ScheduleEntry{
@@ -38,4 +41,10 @@ var FastingSchedule = types.ScheduleEntry{
 		Hour:   12,
 		Minute: 0,
 	},
+}
+
+var FoodRequirements = models.UserFoodRequirements{
+	Kcal:    2000,
+	Protein: 90,
+	Fiber:   30,
 }

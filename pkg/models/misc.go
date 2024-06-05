@@ -17,6 +17,12 @@ type FoodConsumed struct {
 	Date        string `json:"date"`
 }
 
+type UserFoodRequirements struct {
+	Kcal    int `json:"kcal"`
+	Protein int `json:"protein"`
+	Fiber   int `json:"fiber"`
+}
+
 type Book struct {
 	Title  string `json:"title"`
 	Author string `json:"author"`
