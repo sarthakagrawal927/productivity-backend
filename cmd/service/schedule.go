@@ -6,9 +6,10 @@ import (
 	"todo/pkg/constants"
 	db "todo/pkg/database"
 	"todo/pkg/models"
+	types "todo/pkg/types"
 )
 
-func createSchedule() ([]ScheduleEntry, []TaskEntry) {
+func createSchedule() ([]types.ScheduleEntry, []types.TaskEntry) {
 	var (
 		Habits []models.Habit
 		Tasks  []models.Task
@@ -29,7 +30,7 @@ func createSchedule() ([]ScheduleEntry, []TaskEntry) {
 	}()
 	wg.Wait()
 
-	busySlots := []ScheduleEntry{sleepSchedule, officeSchedule}
+	busySlots := []types.ScheduleEntry{constants.SleepSchedule, constants.OfficeSchedule}
 	timeGaps := getTimeGapsFromBusySchedule(busySlots)
 	taskEntries := getTaskEntriesFromHabits(Habits)
 	taskEntries = append(taskEntries, getTaskEntriesFromTasks(Tasks)...)
@@ -42,7 +43,7 @@ func createSchedule() ([]ScheduleEntry, []TaskEntry) {
 	return finalSchedule, taskEntries
 }
 
-func getFormattedSchedule() ([]string, []ScheduleEntry, []TaskEntry) {
+func getFormattedSchedule() ([]string, []types.ScheduleEntry, []types.TaskEntry) {
 	schedule, taskEntries := createSchedule()
 	var formattedSchedule []string
 	for _, entry := range schedule {

@@ -8,59 +8,23 @@ import (
 	"time"
 	"todo/pkg/constants"
 	"todo/pkg/models"
+	"todo/pkg/types"
 
 	"gorm.io/datatypes"
 )
 
-type HourMinute struct {
-	Hour   int `json:"hour"`
-	Minute int `json:"minute"`
-}
-
-type ScheduleEntry struct {
-	Label     string     `json:"label"`
-	StartTime HourMinute `json:"start_time"`
-	EndTime   HourMinute `json:"end_time"`
-	Type      string     `json:"type"`
-}
-
-var sleepSchedule = ScheduleEntry{
-	Label: "sleep",
-	StartTime: HourMinute{
-		Hour:   2,
-		Minute: 0,
-	},
-	EndTime: HourMinute{
-		Hour:   9,
-		Minute: 0,
-	},
-}
-
-// 12-19:30
-var officeSchedule = ScheduleEntry{
-	Label: "Work",
-	StartTime: HourMinute{
-		Hour:   12,
-		Minute: 00,
-	},
-	EndTime: HourMinute{
-		Hour:   19,
-		Minute: 30,
-	},
-}
-
-func getMinutesFromHourMinute(hourMinute HourMinute) int {
+func getMinutesFromHourMinute(hourMinute types.HourMinute) int {
 	return hourMinute.Hour*60 + hourMinute.Minute
 }
 
 // custom sort functions
-type ByPriority []TaskEntry
+type ByPriority []types.TaskEntry
 
 func (a ByPriority) Len() int           { return len(a) }
 func (a ByPriority) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a ByPriority) Less(i, j int) bool { return a[i].Priority < a[j].Priority }
 
-type ByStartTime []ScheduleEntry
+type ByStartTime []types.ScheduleEntry
 
 func (a ByStartTime) Len() int      { return len(a) }
 func (a ByStartTime) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
@@ -68,16 +32,8 @@ func (a ByStartTime) Less(i, j int) bool {
 	return getMinutesFromHourMinute(a[i].StartTime) < getMinutesFromHourMinute(a[j].StartTime)
 }
 
-func getScheduleLabel(entry ScheduleEntry) string {
+func getScheduleLabel(entry types.ScheduleEntry) string {
 	return strconv.Itoa(entry.StartTime.Hour) + ":" + strconv.Itoa(entry.StartTime.Minute) + " - " + strconv.Itoa(entry.EndTime.Hour) + ":" + strconv.Itoa(entry.EndTime.Minute) + " " + entry.Label
-}
-
-type TaskEntry struct {
-	EntityType  uint    `json:"entity_type"`
-	EntityId    uint    `json:"entity_id"`
-	EntityLabel string  `json:"entity_label"`
-	TimeNeeded  uint    `json:"time_needed"`
-	Priority    float64 `json:"priority"` // less number is more
 }
 
 func calculateDifferenceInDays(taskDeadline *datatypes.Date) (float64, error) {
@@ -97,8 +53,8 @@ func calculateDifferenceInDays(taskDeadline *datatypes.Date) (float64, error) {
 	return math.Max(math.Round((hrs)/24), 0), nil // hack until I figure out the time zone issues & add cron to ensure based on timezones
 }
 
-func getTaskEntriesFromHabits(Habits []models.Habit) []TaskEntry {
-	taskEntries := make([]TaskEntry, len(Habits))
+func getTaskEntriesFromHabits(Habits []models.Habit) []types.TaskEntry {
+	taskEntries := make([]types.TaskEntry, len(Habits))
 	for i, habit := range Habits {
 		percentageFulfilled := float64(habit.ExistingUsage) / float64(habit.Target)
 		priority := float64(habit.FrequencyType) * percentageFulfilled // habitFreq 1 is daily, 2 is weekly, 3 is monthly
@@ -114,7 +70,7 @@ func getTaskEntriesFromHabits(Habits []models.Habit) []TaskEntry {
 			priority = priority + 0.3 // so that urgent tasks & today tasks are given priority
 		}
 
-		taskEntries[i] = TaskEntry{
+		taskEntries[i] = types.TaskEntry{
 			EntityType:  constants.ENTITY_HABIT,
 			EntityId:    habit.ID,
 			EntityLabel: "(Habit) " + habit.Title + " - " + habit.Desc,
@@ -125,15 +81,15 @@ func getTaskEntriesFromHabits(Habits []models.Habit) []TaskEntry {
 	return taskEntries
 }
 
-func getTaskEntriesFromTasks(Tasks []models.Task) []TaskEntry {
-	taskEntries := make([]TaskEntry, len(Tasks))
+func getTaskEntriesFromTasks(Tasks []models.Task) []types.TaskEntry {
+	taskEntries := make([]types.TaskEntry, len(Tasks))
 	for i, task := range Tasks {
 		difference, err := calculateDifferenceInDays(task.Deadline)
 		if err != nil {
 			fmt.Println("error calculating difference", err)
 			continue
 		}
-		taskEntries[i] = TaskEntry{
+		taskEntries[i] = types.TaskEntry{
 			EntityType:  constants.ENTITY_TASK,
 			EntityId:    task.ID,
 			EntityLabel: "(Task) " + task.Title + " - " + task.Desc,
@@ -146,14 +102,14 @@ func getTaskEntriesFromTasks(Tasks []models.Task) []TaskEntry {
 }
 
 // can improve this but works for now.
-func getTimeGapsFromBusySchedule(busy []ScheduleEntry) []ScheduleEntry {
+func getTimeGapsFromBusySchedule(busy []types.ScheduleEntry) []types.ScheduleEntry {
 	sort.Sort(ByStartTime(busy))
 
-	var timeGaps []ScheduleEntry
+	var timeGaps []types.ScheduleEntry
 
 	// Function to add a gap entry
-	addGapEntry := func(start HourMinute, end HourMinute) {
-		timeGaps = append(timeGaps, ScheduleEntry{
+	addGapEntry := func(start types.HourMinute, end types.HourMinute) {
+		timeGaps = append(timeGaps, types.ScheduleEntry{
 			Label:     "Free",
 			StartTime: start,
 			EndTime:   end,
@@ -163,7 +119,7 @@ func getTimeGapsFromBusySchedule(busy []ScheduleEntry) []ScheduleEntry {
 
 	// Add gap before first busy
 	if busy[0].StartTime.Hour != 0 || busy[0].StartTime.Minute != 0 {
-		addGapEntry(HourMinute{0, 0}, busy[0].StartTime)
+		addGapEntry(types.HourMinute{Hour: 0, Minute: 0}, busy[0].StartTime)
 	}
 
 	// Add gaps between busy slots
@@ -173,13 +129,13 @@ func getTimeGapsFromBusySchedule(busy []ScheduleEntry) []ScheduleEntry {
 
 	// Add gap after last busy
 	if busy[len(busy)-1].EndTime.Hour != 24 || busy[len(busy)-1].EndTime.Minute != 0 {
-		addGapEntry(busy[len(busy)-1].EndTime, HourMinute{24, 0})
+		addGapEntry(busy[len(busy)-1].EndTime, types.HourMinute{Hour: 24, Minute: 0})
 	}
 
 	return timeGaps
 }
 
-func addTimeToHourMinute(hourMinute HourMinute, timeToAdd uint) HourMinute {
+func addTimeToHourMinute(hourMinute types.HourMinute, timeToAdd uint) types.HourMinute {
 	hourMinute.Minute += int(timeToAdd % 60)
 	hourMinute.Hour += int(timeToAdd / 60)
 	if hourMinute.Minute >= 60 {
@@ -189,7 +145,7 @@ func addTimeToHourMinute(hourMinute HourMinute, timeToAdd uint) HourMinute {
 	return hourMinute
 }
 
-func fillTaskEntriesToAvailableGaps(taskEntries []TaskEntry, gaps []ScheduleEntry) []ScheduleEntry {
+func fillTaskEntriesToAvailableGaps(taskEntries []types.TaskEntry, gaps []types.ScheduleEntry) []types.ScheduleEntry {
 	// assuming gaps are sorted by startTime & taskEntries are sorted by priority
 	// also want to have 5min buffer before & after each task
 	// since this is a difficult dynamic programming problem, I will use a greedy approach for now, fill max priority task in smallest gap it can fit in
@@ -211,17 +167,17 @@ func fillTaskEntriesToAvailableGaps(taskEntries []TaskEntry, gaps []ScheduleEntr
 		return smallestGapIdx
 	}
 
-	insertTaskInGap := func(task TaskEntry, gapIdx int) {
-		scheduledEntry := ScheduleEntry{
+	insertTaskInGap := func(task types.TaskEntry, gapIdx int) {
+		scheduledEntry := types.ScheduleEntry{
 			Label: task.EntityLabel,
-			StartTime: HourMinute{
+			StartTime: types.HourMinute{
 				Hour:   gaps[gapIdx].StartTime.Hour,
 				Minute: gaps[gapIdx].StartTime.Minute,
 			},
 			EndTime: addTimeToHourMinute(gaps[gapIdx].StartTime, task.TimeNeeded),
 			Type:    "task",
 		}
-		gaps = append(gaps, ScheduleEntry{})
+		gaps = append(gaps, types.ScheduleEntry{})
 		copy(gaps[gapIdx+1:], gaps[gapIdx:])
 		gaps[gapIdx] = scheduledEntry
 		gaps[gapIdx+1].StartTime = addTimeToHourMinute(scheduledEntry.EndTime, 5)
@@ -237,7 +193,7 @@ func fillTaskEntriesToAvailableGaps(taskEntries []TaskEntry, gaps []ScheduleEntr
 	}
 
 	// filter out the gaps that are not used
-	var filledSchedule []ScheduleEntry
+	var filledSchedule []types.ScheduleEntry
 	for idx, scheduleEntry := range gaps {
 		if scheduleEntry.Type != "gap" {
 			filledSchedule = append(filledSchedule, gaps[idx])
