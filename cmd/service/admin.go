@@ -9,13 +9,9 @@ import (
 
 func migrateDB(c echo.Context) error {
 	err := db.DB_CONNECTION.GetDB().AutoMigrate(
-		// &models.User{},
-		// &models.Relationship{},
-
 		&models.Task{},
 		&models.Habit{},
 		&models.HabitLog{},
-		// &models.Consumable{},
 
 		&models.JournalEntry{},
 		&models.JournalPrompt{},
@@ -24,9 +20,6 @@ func migrateDB(c echo.Context) error {
 
 		&models.Food_Item{},
 		&models.FoodConsumed{},
-		// &models.Tag{},
-		// &models.Project{},
-		// &models.Goal{},
 	)
 	if err != nil {
 		return c.JSON(500, "Error migrating models")

@@ -11,8 +11,7 @@ import (
 
 func CreateHabit(c echo.Context) error {
 	habit := c.Get("habit").(models.Habit)
-	queryResult := db.DB_CONNECTION.GetDB().Create(&habit)
-	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Created Successfully", Data: habit}, false)
+	return InsertIntoDB(c, &habit)
 }
 
 func GetHabits(c echo.Context) error {
@@ -23,11 +22,11 @@ func GetHabits(c echo.Context) error {
 
 func AddHabitLog(c echo.Context) error {
 	habitLog := c.Get("habit_log").(models.HabitLog)
-	queryResult := db.DB_CONNECTION.GetDB().Create(&habitLog)
-	if err := updateHabitUsage(habitLog.HabitID); err != nil {
-		return utils.HandleEchoError(c, err)
+	err := InsertIntoDB(c, &habitLog)
+	if err2 := updateHabitUsage(habitLog.HabitID); err2 != nil {
+		return utils.HandleEchoError(c, err2)
 	}
-	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Created Successfully", Data: habitLog}, false)
+	return err
 }
 
 // will also need to add CRON to update habit usage
@@ -48,10 +47,19 @@ func GetHabitWithLogs(c echo.Context) error {
 	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Success", Data: map[string]interface{}{"habit": habit, "logs": habitLog}}, true)
 }
 
-func CreateConsumable(c echo.Context) error {
-	consumable := c.Get("consumable").(models.Consumable)
-	queryResult := db.DB_CONNECTION.GetDB().Create(&consumable)
-	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Created Successfully", Data: consumable}, false)
+func InsertIntoDB(c echo.Context, item interface{}) error {
+	queryResult := db.DB_CONNECTION.GetDB().Create(item)
+	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Created Successfully", Data: item}, false)
+}
+
+func CreateBookConsumable(c echo.Context) error {
+	book := c.Get("book").(models.Book)
+	return InsertIntoDB(c, &book)
+}
+
+func CreateFoodConsumable(c echo.Context) error {
+	food := c.Get("food").(models.Food_Item)
+	return InsertIntoDB(c, &food)
 }
 
 func GetConsumables(c echo.Context) error {

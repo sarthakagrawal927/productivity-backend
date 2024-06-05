@@ -27,10 +27,6 @@ type Book struct {
 	Title  string `json:"title"`
 	Author string `json:"author"`
 	Pages  int    `json:"pages"`
-}
-
-type Exercise struct {
-	Name                string `json:"name"`
-	Type                string `json:"type"` // cardio, strength, flexibility
-	PrimaryTargetMuscle string `json:"primary_target_muscle"`
+	Status int    `json:"status"` // read, reading, to read
+	gorm.Model
 }

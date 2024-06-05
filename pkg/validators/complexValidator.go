@@ -105,14 +105,6 @@ func handleValidationArray(validationArray ValidationArray, c echo.Context) (map
 }
 
 var ValidationArrayForMeta = ValidationArray{
-	getSingleValidationObj(ValidationStruct{
-		Field:    "title",
-		Kind:     KIND_STRING,
-		Required: true,
-	}),
-	getSingleValidationObj(ValidationStruct{
-		Field:    "desc",
-		Kind:     KIND_STRING,
-		Required: true,
-	}),
+	getSingleValidationObj(ValidationStruct{Field: "title", Kind: KIND_STRING, Required: true}),
+	getSingleValidationObj(ValidationStruct{Field: "desc", Kind: KIND_STRING, Required: true}),
 }
