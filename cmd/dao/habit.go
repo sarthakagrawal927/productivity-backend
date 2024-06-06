@@ -1,6 +1,5 @@
 package dao
 
-// this is bad, consider writing query builder
 var UpdateHabitFromLogs = `
 UPDATE
 	habits

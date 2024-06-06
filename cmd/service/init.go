@@ -60,7 +60,10 @@ func CreateService() {
 
 	e.POST("/api/consumable/book", CreateBookConsumable, validators.CreateBookValidator)
 	e.POST("/api/consumable/food", CreateFoodConsumable, validators.CreateFoodValidator)
-	e.GET("/api/consumable", GetConsumables)
+	e.POST("/api/consumable/food/log", CreateFoodConsumed, validators.FoodConsumedValidator)
+	e.GET("/api/consumable/food", GetFoodItems)
+	e.GET("/api/consumable/food/log", GetDailyFoodLogs)
+	e.GET("/api/consumable/food/consumption_items", GetFoodConsumed, validators.FoodConsumptionByDateValidator)
 
 	e.POST("/api/admin/db_migrate", migrateDB)
 	e.POST("/api/admin/db_delete_all", deleteAllTasks)

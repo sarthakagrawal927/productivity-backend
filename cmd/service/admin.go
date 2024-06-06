@@ -19,7 +19,7 @@ func migrateDB(c echo.Context) error {
 		&models.Book{},
 
 		&models.Food_Item{},
-		&models.FoodConsumed{},
+		&models.FoodConsumption{},
 	)
 	if err != nil {
 		return c.JSON(500, "Error migrating models")

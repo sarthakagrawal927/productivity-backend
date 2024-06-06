@@ -4,6 +4,7 @@ import (
 	"todo/cmd/dao"
 	db "todo/pkg/database"
 	"todo/pkg/models"
+	types "todo/pkg/types"
 	utils "todo/pkg/utils"
 
 	"github.com/labstack/echo/v4"
@@ -58,12 +59,39 @@ func CreateBookConsumable(c echo.Context) error {
 }
 
 func CreateFoodConsumable(c echo.Context) error {
-	food := c.Get("food").(models.Food_Item)
-	return InsertIntoDB(c, &food)
+	foodItem := c.Get("food").(models.Food_Item)
+	return InsertIntoDB(c, &foodItem)
 }
 
-func GetConsumables(c echo.Context) error {
-	var consumables []models.Consumable
-	queryResult := db.DB_CONNECTION.GetDB().Find(&consumables)
-	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Success", Data: consumables}, true)
+func CreateFoodConsumed(c echo.Context) error {
+	foodConsumption := c.Get("food_consumed").(models.FoodConsumption)
+	return InsertIntoDB(c, &foodConsumption)
+}
+
+func GetFoodItems(c echo.Context) error {
+	var foodItems []models.Food_Item
+	queryResult := db.DB_CONNECTION.GetDB().Find(&foodItems)
+	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Success", Data: foodItems}, true)
+}
+
+func GetFoodConsumed(c echo.Context) error {
+	var foodConsumed []types.DayLevelFoodConsumption
+	queryResult := db.DB_CONNECTION.GetDB().Raw(dao.GetNutrientsConsumedForDate, c.Get("date")).Scan(&foodConsumed)
+	// sum of all nutrients consumed = sum of all nutrients in foodConsumed
+	totalFoodConsumed := types.DayLevelFoodConsumption{}
+	for _, food := range foodConsumed {
+		totalFoodConsumed.Kcal += food.Kcal
+		totalFoodConsumed.Protein += food.Protein
+		totalFoodConsumed.Fiber += food.Fiber
+	}
+	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Success", Data: map[string]interface{}{
+		"food_consumed":       foodConsumed,
+		"total_food_consumed": totalFoodConsumed,
+	}}, true)
+}
+
+func GetDailyFoodLogs(c echo.Context) error {
+	var foodConsumed []models.UserFoodRequirements
+	queryResult := db.DB_CONNECTION.GetDB().Raw(dao.GetFoodConsumptionLogs).Scan(&foodConsumed)
+	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Success", Data: foodConsumed}, true)
 }
