@@ -15,6 +15,8 @@ const (
 	KIND_INT    = "int"
 	KIND_STRING = "string"
 	KIND_BOOL   = "bool"
+	KIND_FLOAT  = "float"
+	KIND_DATE   = "date"
 )
 
 type ValidationRules struct{}
@@ -69,6 +71,7 @@ func handleValidationArray(validationArray ValidationArray, c echo.Context) (map
 	tempInterface := make(map[string]interface{})
 	var err error
 	for _, validationObj := range validationArray {
+		validationObj = getSingleValidationObj(validationObj)
 		value := getValueFromSource(validationObj.Source, validationObj.Field, c)
 		switch validationObj.Kind {
 		case KIND_INT:
@@ -99,12 +102,22 @@ func handleValidationArray(validationArray ValidationArray, c echo.Context) (map
 			if tempInterface[validationObj.Field], err = validateBool(validationObj.Field, value); err != nil {
 				return nil, err
 			}
+
+		case KIND_FLOAT:
+			if tempInterface[validationObj.Field], err = validateFloat(validationObj.Field, value); err != nil {
+				return nil, err
+			}
+
+		case KIND_DATE:
+			if tempInterface[validationObj.Field], err = validateDate(validationObj.Field, value); err != nil {
+				return nil, err
+			}
 		}
 	}
 	return tempInterface, nil
 }
 
 var ValidationArrayForMeta = ValidationArray{
-	getSingleValidationObj(ValidationStruct{Field: "title", Kind: KIND_STRING, Required: true}),
-	getSingleValidationObj(ValidationStruct{Field: "desc", Kind: KIND_STRING, Required: true}),
+	ValidationStruct{Field: "title", Kind: KIND_STRING, Required: true},
+	ValidationStruct{Field: "desc", Kind: KIND_STRING, Required: true},
 }

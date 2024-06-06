@@ -43,6 +43,21 @@ func validateString(key, value string) (string, error) {
 	return value, nil
 }
 
+func validateFloat(key, value string) (float32, error) {
+	var sanitizedFloat float64
+
+	if value == "" {
+		return float32(sanitizedFloat), fmt.Errorf("%s is required", key)
+	}
+
+	sanitizedFloat, err := strconv.ParseFloat(value, 32)
+	if err != nil {
+		return float32(sanitizedFloat), fmt.Errorf("%s should be number: %v", key, err)
+	}
+
+	return float32(sanitizedFloat), nil
+}
+
 // TODO: have ability to make string optional and check for length
 func validateStringFromForm(c echo.Context, key string) (string, error) {
 	return validateString(key, c.FormValue(key))
