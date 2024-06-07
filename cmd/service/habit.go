@@ -69,13 +69,13 @@ func CreateFoodConsumed(c echo.Context) error {
 }
 
 func GetFoodItems(c echo.Context) error {
-	var foodItems []models.Food_Item
+	foodItems := []models.Food_Item{}
 	queryResult := db.DB_CONNECTION.GetDB().Find(&foodItems)
 	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Success", Data: foodItems}, true)
 }
 
 func GetFoodConsumed(c echo.Context) error {
-	var foodConsumed []types.DayLevelFoodConsumption
+	foodConsumed := []types.DayLevelFoodConsumption{}
 	queryResult := db.DB_CONNECTION.GetDB().Raw(dao.GetNutrientsConsumedForDate, c.Get("date")).Scan(&foodConsumed)
 	// sum of all nutrients consumed = sum of all nutrients in foodConsumed
 	totalFoodConsumed := types.DayLevelFoodConsumption{}
@@ -91,7 +91,7 @@ func GetFoodConsumed(c echo.Context) error {
 }
 
 func GetDailyFoodLogs(c echo.Context) error {
-	var foodConsumed []models.UserFoodRequirements
+	foodConsumed := []models.UserFoodRequirements{}
 	queryResult := db.DB_CONNECTION.GetDB().Raw(dao.GetFoodConsumptionLogs).Scan(&foodConsumed)
 	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Success", Data: foodConsumed}, true)
 }

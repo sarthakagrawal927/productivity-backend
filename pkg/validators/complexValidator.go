@@ -22,12 +22,12 @@ const (
 type ValidationRules struct{}
 
 type ValidationStruct struct {
-	Field        string `json:"field"`
-	Source       string `json:"source"`
-	Kind         string `json:"kind"`
-	Required     bool   `json:"required"`
-	ShouldBeFrom []uint `json:"shouldInclude"`
-	Default      uint   `json:"default"`
+	Field        string      `json:"field"`
+	Source       string      `json:"source"`
+	Kind         string      `json:"kind"`
+	Required     bool        `json:"required"`
+	ShouldBeFrom []uint      `json:"shouldInclude"`
+	Default      interface{} `json:"default"`
 }
 
 type ValidationArray []ValidationStruct
@@ -78,7 +78,7 @@ func handleValidationArray(validationArray ValidationArray, c echo.Context) (map
 			// TODO: Rewrite validateIntFromArray & validateInt to better utilize this function
 			if validationObj.ShouldBeFrom != nil && len(validationObj.ShouldBeFrom) > 0 {
 				if tempInterface[validationObj.Field],
-					err = validateIntFromArray(validationObj.Field, value, validationObj.ShouldBeFrom, validationObj.Default); err != nil {
+					err = validateIntFromArray(validationObj.Field, value, validationObj.ShouldBeFrom, validationObj.Default.(uint)); err != nil {
 					return nil, err
 				}
 			} else {
@@ -87,7 +87,7 @@ func handleValidationArray(validationArray ValidationArray, c echo.Context) (map
 						return nil, err
 					}
 				} else {
-					if tempInterface[validationObj.Field], err = validateInt(validationObj.Field, value, validationObj.Default); err != nil {
+					if tempInterface[validationObj.Field], err = validateInt(validationObj.Field, value, validationObj.Default.(uint)); err != nil {
 						return nil, err
 					}
 				}
@@ -99,18 +99,22 @@ func handleValidationArray(validationArray ValidationArray, c echo.Context) (map
 			}
 
 		case KIND_BOOL:
-			if tempInterface[validationObj.Field], err = validateBool(validationObj.Field, value); err != nil {
+			if tempInterface[validationObj.Field], err = validateBool(validationObj.Field, value); err != nil && validationObj.Required {
 				return nil, err
 			}
 
 		case KIND_FLOAT:
-			if tempInterface[validationObj.Field], err = validateFloat(validationObj.Field, value); err != nil {
+			if tempInterface[validationObj.Field], err = validateFloat(validationObj.Field, value); err != nil && validationObj.Required {
 				return nil, err
 			}
 
 		case KIND_DATE:
 			if tempInterface[validationObj.Field], err = validateDate(validationObj.Field, value); err != nil {
-				return nil, err
+				if validationObj.Default != nil && !validationObj.Required {
+					tempInterface[validationObj.Field] = validationObj.Default
+				} else {
+					return nil, err
+				}
 			}
 		}
 	}

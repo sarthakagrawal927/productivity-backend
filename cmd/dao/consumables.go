@@ -17,11 +17,11 @@ SELECT
 	name,
 	kcal * quantity kcal,
 	protein * quantity protein,
-	fiber * quantity protein,
+	fiber * quantity fiber,
 	quantity,
 	created_at
 FROM
-	food_consumeds fc
+	food_consumptions fc
 	LEFT JOIN food_items fi ON fc.food_item_id = fi.id
 WHERE
 	fc. "date" = ?`

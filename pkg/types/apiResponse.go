@@ -6,5 +6,5 @@ type DayLevelFoodConsumption struct {
 	Protein    uint   `json:"protein"`
 	Fiber      uint   `json:"fiber"`
 	Quantity   uint   `json:"quantity"`
-	Created_at string `json:"created_at"`
+	Created_at string `json:"CreatedAt"`
 }

@@ -1,6 +1,7 @@
 package validators
 
 import (
+	"time"
 	"todo/pkg/models"
 	utils "todo/pkg/utils"
 
@@ -19,12 +20,6 @@ var ValidationArrayForCreateFood = ValidationArray{
 	ValidationStruct{Field: "kcal", Kind: KIND_INT, Required: true},
 	ValidationStruct{Field: "protein", Kind: KIND_INT, Required: true},
 	ValidationStruct{Field: "fiber", Kind: KIND_INT, Required: true},
-}
-
-var ValidationArrayForFoodConsumed = ValidationArray{
-	ValidationStruct{Field: "food_item_id", Kind: KIND_INT, Required: true},
-	ValidationStruct{Field: "quantity", Kind: KIND_FLOAT, Required: true},
-	ValidationStruct{Field: "date", Kind: KIND_DATE, Required: true},
 }
 
 func CreateBookValidator(next echo.HandlerFunc) echo.HandlerFunc {
@@ -60,7 +55,11 @@ func CreateFoodValidator(next echo.HandlerFunc) echo.HandlerFunc {
 
 func FoodConsumedValidator(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		objMap, err := handleValidationArray(ValidationArrayForFoodConsumed, c)
+		objMap, err := handleValidationArray(ValidationArray{
+			ValidationStruct{Field: "food_item_id", Kind: KIND_INT, Required: true},
+			ValidationStruct{Field: "quantity", Kind: KIND_FLOAT, Required: true},
+			ValidationStruct{Field: "date", Kind: KIND_DATE, Required: false, Default: datatypes.Date(time.Now())}, // TODO: need to convert UTC for servers
+		}, c)
 		if err != nil {
 			return utils.HandleEchoError(c, err)
 		}
@@ -76,7 +75,7 @@ func FoodConsumedValidator(next echo.HandlerFunc) echo.HandlerFunc {
 func FoodConsumptionByDateValidator(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		objMap, err := handleValidationArray(ValidationArray{
-			ValidationStruct{Field: "date", Kind: KIND_DATE, Required: true, Source: FROM_QUERY},
+			ValidationStruct{Field: "date", Kind: KIND_DATE, Required: false, Source: FROM_QUERY, Default: datatypes.Date(time.Now())},
 		}, c)
 		if err != nil {
 			return utils.HandleEchoError(c, err)
