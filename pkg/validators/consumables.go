@@ -45,9 +45,9 @@ func CreateFoodValidator(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 		c.Set("food", models.Food_Item{
 			Name:    objMap["name"].(string),
-			Kcal:    objMap["kcal"].(uint),
-			Protein: objMap["protein"].(uint),
-			Fiber:   objMap["fiber"].(uint),
+			Kcal:    objMap["kcal"].(float32),
+			Protein: objMap["protein"].(float32),
+			Fiber:   objMap["fiber"].(float32),
 		})
 		return next(c)
 	}
