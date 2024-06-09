@@ -4,21 +4,7 @@ var UpdateHabitFromLogs = `
 UPDATE
 	habits
 SET
-	existing_usage = COALESCE(hls.total_result_count, 0),
-	current_streak = COALESCE(current_streak, 0) + (
-		CASE WHEN anti THEN
-			CASE WHEN COALESCE(hls.total_result_count, 0) <= target THEN
-				1
-			ELSE
-				0
-			END
-		ELSE
-			CASE WHEN COALESCE(hls.total_result_count, 0) >= target THEN
-				1
-			ELSE
-				0
-			END
-		END)
+	existing_usage = COALESCE(hls.total_result_count, 0)
 FROM (
 	SELECT
 		hl.habit_id,

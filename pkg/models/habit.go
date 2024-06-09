@@ -17,8 +17,6 @@ type Habit struct {
 	Status           uint `json:"status"`             // 0 - Paused, 1 - Active
 
 	ExistingUsage uint `json:"existing_usage"` // based on frequency type update this, to handle multiple logs, insert the log then based on freq update
-	CurrentStreak uint `json:"current_streak"` // whenever log is added update this as well
-	// MaxStreak     uint `json:"max_streak"`
 
 	PreferredTimePeriod string `json:"preferred_time_period"` // 12:00-14:00
 	gorm.Model
