@@ -7,6 +7,7 @@ import (
 	db "todo/pkg/database"
 	"todo/pkg/models"
 	types "todo/pkg/types"
+	"todo/pkg/utils"
 )
 
 func createSchedule() ([]types.ScheduleEntry, []types.TaskEntry) {
@@ -30,7 +31,11 @@ func createSchedule() ([]types.ScheduleEntry, []types.TaskEntry) {
 	}()
 	wg.Wait()
 
-	busySlots := []types.ScheduleEntry{constants.SleepSchedule, constants.OfficeSchedule}
+	busySlots := []types.ScheduleEntry{constants.SleepSchedule}
+	if !utils.IsWeekendToday() {
+		busySlots = append(busySlots, constants.OfficeSchedule)
+	}
+
 	timeGaps := getTimeGapsFromBusySchedule(busySlots)
 	taskEntries := getTaskEntriesFromHabits(Habits)
 	taskEntries = append(taskEntries, getTaskEntriesFromTasks(Tasks)...)

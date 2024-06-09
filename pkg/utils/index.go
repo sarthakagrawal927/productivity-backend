@@ -83,3 +83,7 @@ func ConvertToScheduleEntry(timeRange string) (types.ScheduleEntry, error) {
 func InsertElementsInSliceAfterIdx(slice []types.ScheduleEntry, elements []types.ScheduleEntry, idx int) []types.ScheduleEntry {
 	return append(slice[:idx+1], append(elements, slice[idx+1:]...)...)
 }
+
+func IsWeekendToday() bool {
+	return time.Now().Weekday() == time.Saturday || time.Now().Weekday() == time.Sunday
+}
