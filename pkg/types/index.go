@@ -13,9 +13,10 @@ type ScheduleEntry struct {
 }
 
 type TaskEntry struct {
-	EntityType  uint    `json:"entity_type"`
-	EntityId    uint    `json:"entity_id"`
-	EntityLabel string  `json:"entity_label"`
-	TimeNeeded  uint    `json:"time_needed"`
-	Priority    float64 `json:"priority"` // less number is more
+	EntityType    uint          `json:"entity_type"`
+	EntityId      uint          `json:"entity_id"`
+	EntityLabel   string        `json:"entity_label"`
+	TimeNeeded    uint          `json:"time_needed"`
+	Priority      float64       `json:"priority"` // less number is more
+	ScheduleEntry ScheduleEntry `json:"schedule_entry"`
 }

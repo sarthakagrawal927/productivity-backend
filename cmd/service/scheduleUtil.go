@@ -9,6 +9,7 @@ import (
 	"todo/pkg/constants"
 	"todo/pkg/models"
 	"todo/pkg/types"
+	utils "todo/pkg/utils"
 
 	"gorm.io/datatypes"
 )
@@ -76,6 +77,11 @@ func getTaskEntriesFromHabits(Habits []models.Habit) []types.TaskEntry {
 			EntityLabel: "(Habit) " + habit.Title + " - " + habit.Desc,
 			TimeNeeded:  timeNeeded, // consider habit type, mode etc
 			Priority:    priority,   // 0 - 3.3
+		}
+
+		if habit.FrequencyType == constants.HabitDailyFreq && habit.PreferredTimePeriod != "" {
+			taskEntries[i].Priority -= 0.3 // so that preferred tasks are given priority
+			taskEntries[i].ScheduleEntry, _ = utils.ConvertToScheduleEntry(habit.PreferredTimePeriod)
 		}
 	}
 	return taskEntries
@@ -167,26 +173,75 @@ func fillTaskEntriesToAvailableGaps(taskEntries []types.TaskEntry, gaps []types.
 		return smallestGapIdx
 	}
 
-	insertTaskInGap := func(task types.TaskEntry, gapIdx int) {
-		scheduledEntry := types.ScheduleEntry{
-			Label: task.EntityLabel,
-			StartTime: types.HourMinute{
-				Hour:   gaps[gapIdx].StartTime.Hour,
-				Minute: gaps[gapIdx].StartTime.Minute,
-			},
-			EndTime: addTimeToHourMinute(gaps[gapIdx].StartTime, task.TimeNeeded),
-			Type:    "task",
+	// returns gapIdx if habit has preferred time, -1 otherwise
+	getIdxForHabitHasPreferredTime := func(taskScheduleEntry types.ScheduleEntry) int {
+		for i, gap := range gaps {
+			if gap.Type != "gap" {
+				continue
+			}
+			if getMinutesFromHourMinute(gap.StartTime) <= getMinutesFromHourMinute(taskScheduleEntry.StartTime) &&
+				getMinutesFromHourMinute(gap.EndTime) >= getMinutesFromHourMinute(taskScheduleEntry.EndTime) {
+				return i
+			}
 		}
-		gaps = append(gaps, types.ScheduleEntry{})
-		copy(gaps[gapIdx+1:], gaps[gapIdx:])
-		gaps[gapIdx] = scheduledEntry
-		gaps[gapIdx+1].StartTime = addTimeToHourMinute(scheduledEntry.EndTime, 5)
+		return -1
 	}
 
+	insertTaskInGap := func(task types.TaskEntry, gapIdx int) {
+		var scheduledEntry types.ScheduleEntry
+		if task.ScheduleEntry != (types.ScheduleEntry{}) {
+			scheduledEntry = types.ScheduleEntry{
+				StartTime: task.ScheduleEntry.StartTime,
+				EndTime:   task.ScheduleEntry.EndTime,
+			}
+		} else {
+			scheduledEntry = types.ScheduleEntry{
+				StartTime: types.HourMinute{
+					Hour:   gaps[gapIdx].StartTime.Hour,
+					Minute: gaps[gapIdx].StartTime.Minute,
+				},
+				EndTime: addTimeToHourMinute(gaps[gapIdx].StartTime, task.TimeNeeded),
+			}
+		}
+		scheduledEntry.Label = task.EntityLabel
+		scheduledEntry.Type = "task"
+
+		startMinuteGap := getMinutesFromHourMinute(gaps[gapIdx].StartTime)
+		endMinuteGap := getMinutesFromHourMinute(gaps[gapIdx].EndTime)
+
+		startMinuteTask := getMinutesFromHourMinute(scheduledEntry.StartTime)
+		endMinuteTask := getMinutesFromHourMinute(scheduledEntry.EndTime)
+
+		if startMinuteGap == startMinuteTask && endMinuteGap == endMinuteTask { // task fits perfectly in gap
+			gaps[gapIdx] = scheduledEntry
+		} else if startMinuteGap == startMinuteTask { // task is in the beginning of gap
+			gaps = utils.InsertElementsInSliceAfterIdx(gaps, []types.ScheduleEntry{scheduledEntry}, gapIdx-1)
+			gaps[gapIdx+1].StartTime = scheduledEntry.EndTime
+		} else if endMinuteGap == endMinuteTask { // task is in the end of gap
+			gaps = utils.InsertElementsInSliceAfterIdx(gaps, []types.ScheduleEntry{scheduledEntry}, gapIdx)
+			gaps[gapIdx].EndTime = scheduledEntry.StartTime
+		} else { // task is in the middle of gap
+			gaps = utils.InsertElementsInSliceAfterIdx(gaps, []types.ScheduleEntry{scheduledEntry, {
+				StartTime: scheduledEntry.EndTime,
+				EndTime:   gaps[gapIdx].EndTime,
+				Label:     "Free",
+				Type:      "gap",
+			}}, gapIdx)
+			gaps[gapIdx].EndTime = scheduledEntry.StartTime
+		}
+	}
+
+	var gapIdx int
 	for _, task := range taskEntries {
-		gapIdx := findClosestGap(task.TimeNeeded)
+		gapIdx = -1
+		if task.EntityType == constants.ENTITY_HABIT && task.ScheduleEntry != (types.ScheduleEntry{}) {
+			gapIdx = getIdxForHabitHasPreferredTime(task.ScheduleEntry)
+		}
 		if gapIdx == -1 {
-			// fmt.Println("No gap found for task", task.EntityLabel)
+			gapIdx = findClosestGap(task.TimeNeeded)
+			task.ScheduleEntry = types.ScheduleEntry{}
+		}
+		if gapIdx == -1 {
 			continue
 		}
 		insertTaskInGap(task, gapIdx)

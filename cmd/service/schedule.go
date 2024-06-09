@@ -26,7 +26,7 @@ func createSchedule() ([]types.ScheduleEntry, []types.TaskEntry) {
 
 	go func() {
 		defer wg.Done()
-		dbInstance.Order("deadline DESC").Find(&Tasks)
+		dbInstance.Where("status != ?", constants.Done).Order("deadline DESC").Find(&Tasks)
 	}()
 	wg.Wait()
 
