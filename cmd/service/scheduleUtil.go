@@ -67,8 +67,10 @@ func getTaskEntriesFromHabits(Habits []models.Habit) []types.TaskEntry {
 		}
 
 		if habit.FrequencyType != constants.HabitDailyFreq { // a good aim is to clear any habit tasks in around 5 times itself
-			timeNeeded = timeNeeded / 5
-			priority = priority + 0.3 // so that urgent tasks & today tasks are given priority
+			if !utils.IsWeekendToday() {
+				timeNeeded = timeNeeded / 5
+			}
+			priority = priority + 0.2 // so that urgent tasks & today tasks are given priority
 		}
 
 		taskEntries[i] = types.TaskEntry{
@@ -100,8 +102,7 @@ func getTaskEntriesFromTasks(Tasks []models.Task) []types.TaskEntry {
 			EntityId:    task.ID,
 			EntityLabel: "(Task) " + task.Title + " - " + task.Desc,
 			TimeNeeded:  task.TimeToSpend,
-			// considering I allow to set deadline just 7 days in future, lowest priority would be 4-1 + 0.3*7 = 5.1, highest: 4-4 + 0.5*0 = 0
-			Priority: float64(constants.HighPriority-task.Priority) + 0.3*difference, // 0 - 5.1
+			Priority:    float64(constants.HighPriority-task.Priority) + 0.2*difference,
 		}
 	}
 	return taskEntries
