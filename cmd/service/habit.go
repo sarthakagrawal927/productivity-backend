@@ -78,15 +78,15 @@ func GetFoodConsumed(c echo.Context) error {
 	foodConsumed := []types.DayLevelFoodConsumption{}
 	queryResult := db.DB_CONNECTION.GetDB().Raw(dao.GetNutrientsConsumedForDate, c.Get("date")).Scan(&foodConsumed)
 	// sum of all nutrients consumed = sum of all nutrients in foodConsumed
-	totalFoodConsumed := types.DayLevelFoodConsumption{}
-	for _, food := range foodConsumed {
-		totalFoodConsumed.Kcal += food.Kcal
-		totalFoodConsumed.Protein += food.Protein
-		totalFoodConsumed.Fiber += food.Fiber
-	}
+	// totalFoodConsumed := types.DayLevelFoodConsumption{}
+	// for _, food := range foodConsumed {
+	// 	totalFoodConsumed.Kcal += food.Kcal
+	// 	totalFoodConsumed.Protein += food.Protein
+	// 	totalFoodConsumed.Fiber += food.Fiber
+	// }
 	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Success", Data: map[string]interface{}{
-		"food_consumed":       foodConsumed,
-		"total_food_consumed": totalFoodConsumed,
+		"food_consumed": foodConsumed,
+		// "total_food_consumed": totalFoodConsumed,
 	}}, true)
 }
 
