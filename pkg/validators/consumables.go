@@ -17,9 +17,9 @@ var ValidationArrayForCreateBook = ValidationArray{
 
 var ValidationArrayForCreateFood = ValidationArray{
 	ValidationStruct{Field: "name", Kind: KIND_STRING, Required: true, Source: FROM_FORM},
-	ValidationStruct{Field: "kcal", Kind: KIND_INT, Required: true},
-	ValidationStruct{Field: "protein", Kind: KIND_INT, Required: true},
-	ValidationStruct{Field: "fiber", Kind: KIND_INT, Required: true},
+	ValidationStruct{Field: "kcal", Kind: KIND_FLOAT, Required: true},
+	ValidationStruct{Field: "protein", Kind: KIND_FLOAT, Required: true},
+	ValidationStruct{Field: "fiber", Kind: KIND_FLOAT, Required: true},
 }
 
 func CreateBookValidator(next echo.HandlerFunc) echo.HandlerFunc {
