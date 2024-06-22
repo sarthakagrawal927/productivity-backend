@@ -2,6 +2,7 @@ package validators
 
 import (
 	"time"
+	"todo/pkg/constants"
 	"todo/pkg/models"
 	utils "todo/pkg/utils"
 
@@ -85,6 +86,26 @@ func FoodConsumptionByDateValidator(next echo.HandlerFunc) echo.HandlerFunc {
 			return utils.HandleEchoError(c, err)
 		}
 		c.Set("date", objMap["date"].(datatypes.Date))
+		return next(c)
+	}
+}
+
+func GetFoodLogByModeValidator(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		objMap, err := handleValidationArray(ValidationArray{
+			ValidationStruct{
+				Field:        "mode",
+				Kind:         KIND_INT,
+				Required:     false,
+				ShouldBeFrom: []uint{constants.FOOD_LOG_DAY_MODE, constants.FOOD_LOG_WEEK_MODE},
+				Default:      constants.FOOD_LOG_DAY_MODE,
+				Source:       FROM_QUERY,
+			},
+		}, c)
+		if err != nil {
+			return utils.HandleEchoError(c, err)
+		}
+		c.Set("mode", objMap["mode"].(uint))
 		return next(c)
 	}
 }

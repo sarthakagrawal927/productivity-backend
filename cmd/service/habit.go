@@ -1,7 +1,9 @@
 package service
 
 import (
+	"fmt"
 	"todo/cmd/dao"
+	"todo/pkg/constants"
 	db "todo/pkg/database"
 	"todo/pkg/models"
 	types "todo/pkg/types"
@@ -92,6 +94,13 @@ func GetFoodConsumed(c echo.Context) error {
 
 func GetDailyFoodLogs(c echo.Context) error {
 	foodConsumed := []models.UserFoodRequirements{}
-	queryResult := db.DB_CONNECTION.GetDB().Raw(dao.GetFoodConsumptionLogs).Scan(&foodConsumed)
+	mode := c.Get("mode").(uint)
+	var dateGroup string
+	if mode == constants.FOOD_LOG_WEEK_MODE {
+		dateGroup = "date_trunc('week', fc.\"date\")"
+	} else {
+		dateGroup = "fc.\"date\""
+	}
+	queryResult := db.DB_CONNECTION.GetDB().Raw(fmt.Sprintf(dao.GetFoodConsumptionLogs, dateGroup)).Scan(&foodConsumed)
 	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Success", Data: foodConsumed}, true)
 }

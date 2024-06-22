@@ -82,3 +82,8 @@ const (
 	BOOK_FINISHED      // 2
 	BOOK_TO_READ       // 3
 )
+
+const (
+	FOOD_LOG_DAY_MODE uint = iota + 1
+	FOOD_LOG_WEEK_MODE
+)
