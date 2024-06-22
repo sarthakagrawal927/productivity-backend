@@ -10,6 +10,8 @@ type Food_Item struct {
 	Kcal    float32 `json:"kcal"`
 	Protein float32 `json:"protein"`
 	Fiber   float32 `json:"fiber"`
+	Fat     float32 `json:"fat"`
+	Carbs   float32 `json:"carbs"`
 
 	// can add more macro nutrients later
 	gorm.Model
@@ -25,6 +27,8 @@ type UserFoodRequirements struct {
 	Kcal    float32 `json:"kcal"`
 	Protein float32 `json:"protein"`
 	Fiber   float32 `json:"fiber"`
+	Fat     float32 `json:"fat"`
+	Carbs   float32 `json:"carbs"`
 	Date    string  `json:"date"`
 }
 

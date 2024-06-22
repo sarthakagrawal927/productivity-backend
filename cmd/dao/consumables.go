@@ -5,6 +5,8 @@ var GetFoodConsumptionLogs = `
 		sum(fc.quantity * fi.fiber) fiber,
 		sum(fc.quantity * fi.kcal) kcal,
 		sum(fc.quantity * fi.protein) protein,
+		sum(fc.quantity * fi.fat) fat,
+		sum(fc.quantity * fi.carbs) carbs,
 		fc. "date"
 	FROM
 		food_consumptions fc
@@ -18,6 +20,8 @@ SELECT
 	kcal * quantity kcal,
 	protein * quantity protein,
 	fiber * quantity fiber,
+	fat * quantity fat,
+	carbs * quantity carbs,
 	quantity,
 	created_at
 FROM

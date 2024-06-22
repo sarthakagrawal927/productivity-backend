@@ -63,6 +63,14 @@ var (
 )
 
 const (
+	ACTIVITY_TIME_CHANGED uint = iota + 1
+	ACTIVITY_SKIPPED_FOR_TIME
+)
+
+// for every activity (based on habit) user skips or time changes, we log to activity table. Using this data we can suggest users to modify their habits.
+// based on the reason of skipping or changing time, we can suggest users to improvise. Do not store successes, only failures.
+
+const (
 	ENTITY_TASK    uint = iota + 1
 	ENTITY_HABIT        // 2
 	ENTITY_PROJECT      // 3

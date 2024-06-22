@@ -20,6 +20,8 @@ var ValidationArrayForCreateFood = ValidationArray{
 	ValidationStruct{Field: "kcal", Kind: KIND_FLOAT, Required: true},
 	ValidationStruct{Field: "protein", Kind: KIND_FLOAT, Required: true},
 	ValidationStruct{Field: "fiber", Kind: KIND_FLOAT, Required: true},
+	ValidationStruct{Field: "fat", Kind: KIND_FLOAT, Required: true},
+	ValidationStruct{Field: "carbs", Kind: KIND_FLOAT, Required: true},
 }
 
 func CreateBookValidator(next echo.HandlerFunc) echo.HandlerFunc {
@@ -48,6 +50,8 @@ func CreateFoodValidator(next echo.HandlerFunc) echo.HandlerFunc {
 			Kcal:    objMap["kcal"].(float32),
 			Protein: objMap["protein"].(float32),
 			Fiber:   objMap["fiber"].(float32),
+			Fat:     objMap["fat"].(float32),
+			Carbs:   objMap["carbs"].(float32),
 		})
 		return next(c)
 	}

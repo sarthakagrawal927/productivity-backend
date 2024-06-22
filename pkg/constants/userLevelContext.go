@@ -44,7 +44,9 @@ var FastingSchedule = types.ScheduleEntry{
 }
 
 var FoodRequirements = models.UserFoodRequirements{
-	Kcal:    2000,
-	Protein: 90,
-	Fiber:   30,
+	Kcal:    1650,
+	Protein: 135,
+	Fiber:   33,
+	Carbs:   200,
+	Fat:     50,
 }
