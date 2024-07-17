@@ -39,6 +39,8 @@ func SetupDBConnection() {
 	var err error
 	fmt.Println("[DB] Setting up database connection to URL: ", os.Getenv("DATABASE_URL"))
 	DB_CONNECTION, err = getNewPostgresDB(os.Getenv("DATABASE_URL"))
+
+	// DB_CONNECTION, err = getNewPostgresDB("host=host.docker.internal port=5432 user=postgres password=1234567890 dbname=moves_dev sslmode=disable TimeZone=Asia/Shanghai")
 	if err != nil {
 		fmt.Println("[DB] Error setting up database connection")
 	} else {

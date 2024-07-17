@@ -87,3 +87,8 @@ const (
 	FOOD_LOG_DAY_MODE uint = iota + 1
 	FOOD_LOG_WEEK_MODE
 )
+
+const (
+	REGULAR_FOOD uint = iota + 1
+	NOT_REGULAR_FOOD
+)

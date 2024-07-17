@@ -6,12 +6,13 @@ import (
 )
 
 type Food_Item struct {
-	Name    string  `json:"name"`
-	Kcal    float32 `json:"kcal"`
-	Protein float32 `json:"protein"`
-	Fiber   float32 `json:"fiber"`
-	Fat     float32 `json:"fat"`
-	Carbs   float32 `json:"carbs"`
+	Name     string  `json:"name"`
+	Kcal     float32 `json:"kcal"`
+	Protein  float32 `json:"protein"`
+	Fiber    float32 `json:"fiber"`
+	Fat      float32 `json:"fat"`
+	Carbs    float32 `json:"carbs"`
+	Standard uint    `json:"standard"`
 
 	// can add more macro nutrients later
 	gorm.Model
@@ -21,6 +22,7 @@ type FoodConsumption struct {
 	Food_Item_ID uint           `json:"food_item_id"`
 	Quantity     float32        `json:"quantity"`
 	Date         datatypes.Date `json:"date"`
+	ID           uint           `gorm:"primarykey"`
 }
 
 type UserFoodRequirements struct {
