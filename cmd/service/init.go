@@ -3,7 +3,7 @@ package service
 import (
 	"net/http"
 	"todo/pkg/metrics"
-	oauth "todo/pkg/oauth"
+	authMiddleware "todo/pkg/middlewares"
 	validators "todo/pkg/validators"
 
 	"github.com/labstack/echo/v4"
@@ -20,6 +20,7 @@ func CreateService() {
 
 	s := metrics.NewStats()
 	e.Use(s.Process)
+	e.Use(authMiddleware.AttachUser)
 	e.Use(middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
 		LogURI:    true,
 		LogStatus: true,
@@ -69,11 +70,7 @@ func CreateService() {
 	e.GET("/api/admin/metrics", s.Handle)
 	e.POST("/api/admin/db_seed", seedTasks)
 
-	//auth changes
-
-	e.POST("/api/auth/jwt_validate", oauth.ValidateJWT)
-
-	//auth changes end
+	e.POST("/api/auth/jwt_validate", ValidateGoogleJWT)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }

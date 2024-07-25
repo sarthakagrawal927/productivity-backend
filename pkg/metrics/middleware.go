@@ -46,11 +46,3 @@ func (s *Stats) Handle(c echo.Context) error {
 	defer s.mutex.RUnlock()
 	return c.JSON(http.StatusOK, s)
 }
-
-// ServerHeader middleware adds a `Server` header to the response.
-func ServerHeader(next echo.HandlerFunc) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		c.Response().Header().Set(echo.HeaderServer, "Echo/3.0")
-		return next(c)
-	}
-}
