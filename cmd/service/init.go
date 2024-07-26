@@ -3,6 +3,7 @@ package service
 import (
 	"net/http"
 	"todo/pkg/metrics"
+	authMiddleware "todo/pkg/middlewares"
 	validators "todo/pkg/validators"
 
 	"github.com/labstack/echo/v4"
@@ -31,6 +32,8 @@ func CreateService() {
 		},
 	}))
 
+	e.POST("/api/auth/google", authMiddleware.HandleGoogleAuth)
+
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
@@ -40,6 +43,8 @@ func CreateService() {
 			"message": "Hello, World!",
 		})
 	})
+
+	e.Use(authMiddleware.AttachUser)
 
 	e.GET("/api/user/today/logs", GetDailyLogs)
 	e.GET("/api/user/today/schedule", GetTodaySchedule)

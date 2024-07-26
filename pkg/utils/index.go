@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 	"todo/pkg/constants"
 	"todo/pkg/types"
 
+	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 )
@@ -86,4 +88,36 @@ func InsertElementsInSliceAfterIdx(slice []types.ScheduleEntry, elements []types
 
 func IsWeekendToday() bool {
 	return time.Now().Weekday() == time.Saturday || time.Now().Weekday() == time.Sunday
+}
+
+func ReadAllCookies(c echo.Context) {
+	cookies := c.Cookies()
+	fmt.Printf("Number of cookies: %d\n", len(cookies))
+	for _, cookie := range cookies {
+		fmt.Printf("Cookie Name: %s, Value: %s\n", cookie.Name, cookie.Value)
+	}
+}
+
+func ParseJWT(tokenString string) (jwt.MapClaims, error) {
+	// Parse the JWT token
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return []byte(os.Getenv("JWT_SECRET")), nil
+	})
+
+	if err != nil {
+		if err == jwt.ErrSignatureInvalid {
+			return nil, fmt.Errorf("signature invalid")
+		}
+		return nil, fmt.Errorf("error parsing token: %v", err)
+	}
+
+	// Extract and verify email from claims
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok || !token.Valid {
+		return nil, fmt.Errorf("invalid token")
+	}
+	return claims, nil
 }
