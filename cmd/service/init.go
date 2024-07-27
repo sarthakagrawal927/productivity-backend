@@ -2,6 +2,7 @@ package service
 
 import (
 	"net/http"
+	"os"
 	"todo/pkg/metrics"
 	authMiddleware "todo/pkg/middlewares"
 	validators "todo/pkg/validators"
@@ -13,7 +14,11 @@ import (
 
 func CreateService() {
 	e := echo.New()
-	e.Use(middleware.CORS())
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins:     []string{os.Getenv("CLIENT_URL")},
+		AllowMethods:     []string{http.MethodGet, http.MethodHead, http.MethodPut, http.MethodPatch, http.MethodPost, http.MethodDelete},
+		AllowCredentials: true,
+	}))
 
 	e.Logger.SetLevel(1)
 	logger, _ := zap.NewProduction()
