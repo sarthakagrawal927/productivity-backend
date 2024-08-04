@@ -14,11 +14,6 @@ import (
 
 type AuthRequest struct {
 	Token string `json:"token"`
-	User  struct {
-		Name  string `json:"name"`
-		Email string `json:"email"`
-		Image string `json:"image"`
-	} `json:"user"`
 }
 
 func HandleGoogleAuth(c echo.Context) error {
@@ -28,20 +23,23 @@ func HandleGoogleAuth(c echo.Context) error {
 	}
 
 	// Verify the Google token
-	_, err := idtoken.Validate(c.Request().Context(), req.Token, os.Getenv("GOOGLE_CLIENT_ID"))
+	payload, err := idtoken.Validate(c.Request().Context(), req.Token, os.Getenv("GOOGLE_CLIENT_ID"))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusUnauthorized, "Invalid token")
 	}
 
-	// Create a session for the user
-	userId, err := CreateUserWithEmailIfNotExists(req.User.Email)
+	// map[at_hash:OXdDbsLLoNM2y_zxHaUVyw aud:616778546290-pk54dktkqqsno31b418bclt7lhfga8oq.apps.googleusercontent.com azp:616778546290-pk54dktkqqsno31b418bclt7lhfga8oq.apps.googleusercontent.com email:sarthakagrawal927@gmail.com email_verified:true exp:1.722788293e+09 family_name:Agrawal given_name:Sarthak iat:1.722784693e+09 iss:https://accounts.google.com name:Sarthak Agrawal picture:https://lh3.googleusercontent.com/a/ACg8ocK4NgzJQmR5BR0hh_HHxLfZdCxgCXkJVERkcfPrK1zePlndoXT7=s96-c sub:110994534743808702789]
+	// fmt.Printf("%+v", payload.Claims)
+
+	// Create a session for the user, can store name & photo as well
+	userId, err := CreateUserWithEmailIfNotExists(payload.Claims["email"].(string))
 
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to create user")
 	}
 
 	// Create a session token
-	sessionToken, err := createSessionToken(userId, req.User.Email)
+	sessionToken, err := createSessionToken(userId)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to create session")
 	}
@@ -52,11 +50,10 @@ func HandleGoogleAuth(c echo.Context) error {
 	})
 }
 
-func createSessionToken(userID uint, email string) (string, error) {
+func createSessionToken(userID uint) (string, error) {
 	// Create a new JWT token
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
-	claims["email"] = email
 	claims["id"] = userID
 
 	// Sign the token with a secret
