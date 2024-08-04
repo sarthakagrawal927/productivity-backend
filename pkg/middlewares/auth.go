@@ -95,12 +95,11 @@ func AttachUser(next echo.HandlerFunc) echo.HandlerFunc {
 			return c.JSON(http.StatusUnauthorized, err.Error())
 		}
 
-		if claims["email"] == nil || claims["email"].(string) == "" {
+		if claims["id"] == nil || claims["id"].(float64) == 0 {
 			return c.JSON(http.StatusUnauthorized, "Missing email claim")
 		}
 
 		c.Set("user_id", claims["id"].(float64))
-		c.Set("email", claims["email"].(string))
 
 		return next(c)
 	}
