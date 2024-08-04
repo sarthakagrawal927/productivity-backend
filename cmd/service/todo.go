@@ -19,8 +19,7 @@ func CreateTodo(c echo.Context) error {
 func GetTodo(c echo.Context) error {
 	var tasks []models.Task
 	userId := c.Get("user_id")
-	email := c.Get("email")
-	fmt.Println(userId, email)
+	fmt.Println(userId)
 	status := c.Get("status").(uint)
 	var queryResult *gorm.DB
 	if status == 0 {
