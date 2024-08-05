@@ -13,6 +13,7 @@ var GetFoodConsumptionLogs = `
 		FROM
 			food_consumptions fc
 			LEFT JOIN food_items fi ON fc.food_item_id = fi.id
+		WHERE fc.user_id = ?
 		GROUP BY
 			date_group
 	)
@@ -42,4 +43,4 @@ FROM
 	food_consumptions fc
 	LEFT JOIN food_items fi ON fc.food_item_id = fi.id
 WHERE
-	fc. "date" = ?`
+	fc."date" = ? AND fc.user_id = ?`

@@ -1,13 +1,11 @@
 package service
 
 import (
-	"fmt"
 	db "todo/pkg/database"
 	"todo/pkg/models"
 	validators "todo/pkg/utils"
 
 	"github.com/labstack/echo/v4"
-	"gorm.io/gorm"
 )
 
 func CreateTodo(c echo.Context) error {
@@ -18,22 +16,17 @@ func CreateTodo(c echo.Context) error {
 
 func GetTodo(c echo.Context) error {
 	var tasks []models.Task
-	userId := c.Get("user_id")
-	fmt.Println(userId)
-	status := c.Get("status").(uint)
-	var queryResult *gorm.DB
-	if status == 0 {
-		queryResult = db.DB_CONNECTION.GetDB().Find(&tasks)
-	} else {
-		queryResult = db.DB_CONNECTION.GetDB().Where("status = ?", status).Find(&tasks)
-	}
+	userId := c.Get("user_id").(uint)
+	// status := c.Get("status").(uint)
+	queryResult := db.DB_CONNECTION.GetDB().Where("user_id = ?", userId).Find(&tasks)
 	return validators.HandleQueryResult(queryResult, c, validators.RequestResponse{Message: "Success", Data: tasks}, true)
 }
 
 func DeleteTodo(c echo.Context) error {
 	var task models.Task
 	id := c.Get("id").(uint)
-	queryResult := db.DB_CONNECTION.GetDB().Where("id = ?", id).Delete(&task)
+	userId := c.Get("user_id").(uint)
+	queryResult := db.DB_CONNECTION.GetDB().Where("id = ?", id).Where("user_id = ?", userId).Delete(&task)
 	return validators.HandleQueryResult(queryResult, c, validators.RequestResponse{Message: "Deleted Successfully"}, false)
 }
 

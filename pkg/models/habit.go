@@ -25,6 +25,7 @@ type Habit struct {
 // will just have daily logs, can use group by for weekly goals
 // or can cache or rewrite in table with different type
 type HabitLog struct {
+	UserId      uint           `json:"user_id"`
 	HabitID     uint           `json:"habit_id"`
 	ResultCount uint           `json:"result_count"`
 	ResultDate  datatypes.Date `json:"result_time"`

@@ -45,6 +45,7 @@ func CreateHabitValidator(next echo.HandlerFunc) echo.HandlerFunc {
 			return utils.HandleEchoError(c, err)
 		}
 
+		habit.UserId = c.Get("user_id").(uint)
 		c.Set("habit", habit)
 		return next(c)
 	}
@@ -75,6 +76,7 @@ func CreateHabitLogValidator(next echo.HandlerFunc) echo.HandlerFunc {
 
 		habitLog.Comment, _ = validateStringFromForm(c, "comment")
 
+		habitLog.UserId = c.Get("user_id").(uint)
 		c.Set("habit_log", habitLog)
 		return next(c)
 	}

@@ -6,6 +6,7 @@ import (
 )
 
 type Food_Item struct {
+	UserId   uint    `json:"user_id"`
 	Name     string  `json:"name"`
 	Kcal     float32 `json:"kcal"`
 	Protein  float32 `json:"protein"`
@@ -19,6 +20,7 @@ type Food_Item struct {
 }
 
 type FoodConsumption struct {
+	UserID       uint           `json:"user_id"`
 	Food_Item_ID uint           `json:"food_item_id"`
 	Quantity     float32        `json:"quantity"`
 	Date         datatypes.Date `json:"date"`
@@ -26,6 +28,7 @@ type FoodConsumption struct {
 }
 
 type UserFoodRequirements struct {
+	UserID  uint    `json:"user_id"`
 	Kcal    float32 `json:"kcal"`
 	Protein float32 `json:"protein"`
 	Fiber   float32 `json:"fiber"`

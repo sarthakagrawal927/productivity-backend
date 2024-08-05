@@ -19,7 +19,8 @@ func CreateHabit(c echo.Context) error {
 
 func GetHabits(c echo.Context) error {
 	var habits []models.Habit
-	queryResult := db.DB_CONNECTION.GetDB().Find(&habits)
+	userId := c.Get("user_id").(uint)
+	queryResult := db.DB_CONNECTION.GetDB().Where("user_id = ?", userId).Order("created_at desc").Find(&habits)
 	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Success", Data: habits}, true)
 }
 
@@ -72,13 +73,14 @@ func CreateFoodConsumed(c echo.Context) error {
 
 func GetFoodItems(c echo.Context) error {
 	foodItems := []models.Food_Item{}
-	queryResult := db.DB_CONNECTION.GetDB().Find(&foodItems)
+	userId := c.Get("user_id").(uint)
+	queryResult := db.DB_CONNECTION.GetDB().Where("user_id = ?", userId).Order("created_at desc").Find(&foodItems)
 	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Success", Data: foodItems}, true)
 }
 
 func GetFoodConsumed(c echo.Context) error {
 	foodConsumed := []types.DayLevelFoodConsumption{}
-	queryResult := db.DB_CONNECTION.GetDB().Raw(dao.GetNutrientsConsumedForDate, c.Get("date")).Scan(&foodConsumed)
+	queryResult := db.DB_CONNECTION.GetDB().Raw(dao.GetNutrientsConsumedForDate, c.Get("date"), c.Get("user_id")).Scan(&foodConsumed)
 	// sum of all nutrients consumed = sum of all nutrients in foodConsumed
 	// totalFoodConsumed := types.DayLevelFoodConsumption{}
 	// for _, food := range foodConsumed {
@@ -95,12 +97,13 @@ func GetFoodConsumed(c echo.Context) error {
 func GetDailyFoodLogs(c echo.Context) error {
 	foodConsumed := []models.UserFoodRequirements{}
 	mode := c.Get("mode").(uint)
+	userId := c.Get("user_id").(uint)
 	var dateGroup string
 	if mode == constants.FOOD_LOG_WEEK_MODE {
 		dateGroup = "date_trunc('week', fc.\"date\")"
 	} else {
 		dateGroup = "fc.\"date\""
 	}
-	queryResult := db.DB_CONNECTION.GetDB().Raw(fmt.Sprintf(dao.GetFoodConsumptionLogs, dateGroup)).Scan(&foodConsumed)
+	queryResult := db.DB_CONNECTION.GetDB().Raw(fmt.Sprintf(dao.GetFoodConsumptionLogs, dateGroup), userId).Scan(&foodConsumed)
 	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Success", Data: foodConsumed}, true)
 }

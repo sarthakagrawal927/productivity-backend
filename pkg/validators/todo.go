@@ -46,6 +46,7 @@ func CreateTaskValidator(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 
 		task.Desc = c.FormValue("desc")
+		task.UserId = c.Get("user_id").(uint)
 		c.Set("task", task)
 		return next(c)
 	}
@@ -105,6 +106,7 @@ func UpdateTaskValidator(next echo.HandlerFunc) echo.HandlerFunc {
 		if len(updateObj) == 0 {
 			return utils.HandleEchoError(c, fmt.Errorf("no update field"))
 		} else {
+			updateObj["user_id"] = c.Get("user_id").(uint)
 			c.Set("updateObj", updateObj)
 		}
 

@@ -29,13 +29,19 @@ func GetDailyLogs(c echo.Context) error {
 	currentTime := time.Now()
 	formattedTodayDate := currentTime.Format("2006-01-02 15:04:05")
 	formattedYesterdayDate := currentTime.AddDate(0, 0, -1).Format("2006-01-02 15:04:05")
+	userId := c.Get("user_id")
 
-	queryResult := db.DB_CONNECTION.GetDB().Table("habit_logs").Select("habit_logs.*, habits.mode, habits.frequency_type, habits.title").Joins("LEFT JOIN habits on habits.id = habit_logs.habit_id").Where("habit_logs.result_date IN (?, ?)", formattedTodayDate, formattedYesterdayDate).Scan(&habitLog)
+	queryResult := db.DB_CONNECTION.GetDB().Table("habit_logs").
+		Select("habit_logs.*, habits.mode, habits.frequency_type, habits.title").
+		Joins("LEFT JOIN habits on habits.id = habit_logs.habit_id").
+		Where("habit_logs.result_date IN (?, ?) AND habit_logs.user_id = ?", formattedTodayDate, formattedYesterdayDate, userId).
+		Scan(&habitLog)
 	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Success", Data: habitLog}, true)
 }
 
 func GetTodaySchedule(c echo.Context) error {
-	formattedSchedule, schedule, taskEntries := getFormattedSchedule()
+	userId := c.Get("user_id")
+	formattedSchedule, schedule, taskEntries := getFormattedSchedule(userId.(uint))
 	return c.JSON(http.StatusOK, utils.RequestResponse{Message: "Success", Data: map[string]interface{}{
 		"formatted_schedule": formattedSchedule,
 		"schedule":           schedule,

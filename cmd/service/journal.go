@@ -22,13 +22,15 @@ func GetJournalEntries(c echo.Context) error {
 	pagenum := int(c.Get("pagenum").(uint))
 	pagesize := int(c.Get("pagesize").(uint))
 	journalType := c.Get("type").(uint)
+	userId := c.Get("user_id").(uint)
 
 	journalTypes := constants.JournalTypeList
 	if journalType != 0 {
 		journalTypes = []uint{journalType}
 	}
 
-	queryResult := db.DB_CONNECTION.GetDB().Select("id", "title", "created_at", "desc", "type").Where("type in ?", journalTypes).Limit(pagesize).Offset((pagenum - 1) * pagesize).Order(clause.OrderByColumn{Column: clause.Column{Name: "created_at"}, Desc: true}).Find(&journalEntries)
+	queryResult := db.DB_CONNECTION.GetDB().Select("id", "title", "created_at", "desc", "type").Where("type in ?", journalTypes).Where("user_id = ?", userId).
+		Limit(pagesize).Offset((pagenum - 1) * pagesize).Order(clause.OrderByColumn{Column: clause.Column{Name: "created_at"}, Desc: true}).Find(&journalEntries)
 
 	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Success", Data: journalEntries}, true)
 }
@@ -36,6 +38,7 @@ func GetJournalEntries(c echo.Context) error {
 func GetJournalEntry(c echo.Context) error {
 	var journalEntry models.JournalEntry
 	id := c.Param("id")
-	queryResult := db.DB_CONNECTION.GetDB().Where("id = ?", id).First(&journalEntry)
+	userId := c.Get("user_id").(uint)
+	queryResult := db.DB_CONNECTION.GetDB().Where("id = ?", id).Where("user_id = ?", userId).First(&journalEntry)
 	return utils.HandleQueryResult(queryResult, c, utils.RequestResponse{Message: "Success", Data: journalEntry}, false)
 }

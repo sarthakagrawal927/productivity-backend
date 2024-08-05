@@ -10,7 +10,7 @@ import (
 	"todo/pkg/utils"
 )
 
-func createSchedule() ([]types.ScheduleEntry, []types.TaskEntry) {
+func createSchedule(userId uint) ([]types.ScheduleEntry, []types.TaskEntry) {
 	var (
 		Habits []models.Habit
 		Tasks  []models.Task
@@ -22,12 +22,15 @@ func createSchedule() ([]types.ScheduleEntry, []types.TaskEntry) {
 
 	go func() {
 		defer wg.Done()
-		dbInstance.Where("anti = ?", false).Where("COALESCE(existing_usage, 0) < target").Where("status = ?", constants.HabitActive).Find(&Habits)
+		dbInstance.Where("anti = ?", false).
+			Where("COALESCE(existing_usage, 0) < target").
+			Where("status = ? AND user_id = ?", constants.HabitActive, userId).Find(&Habits)
 	}()
 
 	go func() {
 		defer wg.Done()
-		dbInstance.Where("status != ?", constants.Done).Order("deadline DESC").Find(&Tasks)
+		dbInstance.Where("status != ?", constants.Done).Where("user_id = ?", userId).
+			Order("deadline DESC").Find(&Tasks)
 	}()
 	wg.Wait()
 
@@ -48,8 +51,8 @@ func createSchedule() ([]types.ScheduleEntry, []types.TaskEntry) {
 	return finalSchedule, taskEntries
 }
 
-func getFormattedSchedule() ([]string, []types.ScheduleEntry, []types.TaskEntry) {
-	schedule, taskEntries := createSchedule()
+func getFormattedSchedule(userId uint) ([]string, []types.ScheduleEntry, []types.TaskEntry) {
+	schedule, taskEntries := createSchedule(userId)
 	var formattedSchedule []string
 	for _, entry := range schedule {
 		formattedSchedule = append(formattedSchedule, getScheduleLabel(entry))

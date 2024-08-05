@@ -25,6 +25,8 @@ func CreateJournalValidator(next echo.HandlerFunc) echo.HandlerFunc {
 			return utils.HandleEchoError(c, err)
 		}
 
+		journal.UserId = c.Get("user_id").(uint)
+
 		c.Set("journal", journal)
 		return next(c)
 	}
