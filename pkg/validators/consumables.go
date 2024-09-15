@@ -72,6 +72,7 @@ func FoodConsumedValidator(next echo.HandlerFunc) echo.HandlerFunc {
 			Food_Item_ID: objMap["food_item_id"].(uint),
 			Quantity:     objMap["quantity"].(float32),
 			Date:         objMap["date"].(datatypes.Date),
+			UserID:       c.Get("user_id").(uint),
 		})
 		return next(c)
 	}
