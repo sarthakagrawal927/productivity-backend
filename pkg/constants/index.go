@@ -45,6 +45,22 @@ const (
 	HabitMlMode         // for example, 1 liter of water
 )
 
+const (
+	HabitCategoryHealth uint = iota + 1
+	HabitCategoryFinance
+	HabitCategoryRelationship
+	HabitCategoryBrain
+	HabitCategoryProductivity
+)
+
+const (
+	MoodRatingVeryBad  uint = iota + 1 // 1
+	MoodRatingBad                      // 2
+	MoodRatingNeutral                  // 3
+	MoodRatingGood                     // 4
+	MoodRatingVeryGood                 // 5
+)
+
 const DefaultPageSize = 20
 
 var (
@@ -60,6 +76,8 @@ var (
 	HabitFreqTypeList = []uint{uint(HabitDailyFreq), uint(HabitWeeklyFreq), uint(HabitMonthlyFreq)}
 	HabitStatusList   = []uint{uint(HabitArchived), uint(HabitActive)}
 	HabitModeList     = []uint{uint(HabitTimeMode), uint(HabitCountMode), uint(HabitMlMode)}
+	HabitCategoryList = []uint{uint(HabitCategoryHealth), uint(HabitCategoryFinance), uint(HabitCategoryRelationship), uint(HabitCategoryBrain), uint(HabitCategoryProductivity)}
+	MoodRatingList    = []uint{uint(MoodRatingVeryBad), uint(MoodRatingBad), uint(MoodRatingNeutral), uint(MoodRatingGood), uint(MoodRatingVeryGood)}
 )
 
 const (

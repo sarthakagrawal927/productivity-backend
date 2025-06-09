@@ -57,13 +57,15 @@ func calculateDifferenceInDays(taskDeadline *datatypes.Date) (float64, error) {
 func getTaskEntriesFromHabits(Habits []models.Habit) []types.TaskEntry {
 	taskEntries := make([]types.TaskEntry, len(Habits))
 	for i, habit := range Habits {
-		percentageFulfilled := float64(habit.ExistingUsage) / float64(habit.Target)
-		priority := float64(habit.FrequencyType) * percentageFulfilled // habitFreq 1 is daily, 2 is weekly, 3 is monthly
+		// Calculate target based on lower limit (minimum goal)
+		target := habit.LowerLimit
+		percentageFulfilled := float64(habit.ExistingUsage) / float64(target)
+		priority := float64(habit.Priority) * percentageFulfilled // Use priority field directly
 
-		timeNeeded := habit.Target - habit.ExistingUsage
+		timeNeeded := target - habit.ExistingUsage
 
-		if habit.Mode == constants.HabitCountMode {
-			timeNeeded = habit.ApproxTimeNeeded * timeNeeded
+		if habit.Mode == constants.HabitCountMode && habit.ApproxTimeNeeded != nil {
+			timeNeeded = *habit.ApproxTimeNeeded * timeNeeded
 		}
 
 		if habit.FrequencyType != constants.HabitDailyFreq { // a good aim is to clear any habit tasks in around 5 times itself
@@ -73,18 +75,20 @@ func getTaskEntriesFromHabits(Habits []models.Habit) []types.TaskEntry {
 			priority = priority + 0.2 // so that urgent tasks & today tasks are given priority
 		}
 
+		// Add preferred time handling if needed
+		if habit.FrequencyType == constants.HabitDailyFreq && habit.PreferredStartTime != nil {
+			priority -= 0.3 // so that preferred tasks are given priority
+			taskEntries[i].ScheduleEntry, _ = utils.ConvertToScheduleEntryFromTime(*habit.PreferredStartTime)
+		}
+
 		taskEntries[i] = types.TaskEntry{
 			EntityType:  constants.ENTITY_HABIT,
 			EntityId:    habit.ID,
-			EntityLabel: "(Habit) " + habit.Title + " - " + habit.Desc,
+			EntityLabel: "(Habit) " + habit.Title,
 			TimeNeeded:  timeNeeded, // consider habit type, mode etc
 			Priority:    priority,   // 0 - 3.3
 		}
 
-		if habit.FrequencyType == constants.HabitDailyFreq && habit.PreferredTimePeriod != "" {
-			taskEntries[i].Priority -= 0.3 // so that preferred tasks are given priority
-			taskEntries[i].ScheduleEntry, _ = utils.ConvertToScheduleEntry(habit.PreferredTimePeriod)
-		}
 	}
 	return taskEntries
 }
@@ -100,7 +104,7 @@ func getTaskEntriesFromTasks(Tasks []models.Task) []types.TaskEntry {
 		taskEntries[i] = types.TaskEntry{
 			EntityType:  constants.ENTITY_TASK,
 			EntityId:    task.ID,
-			EntityLabel: "(Task) " + task.Title + " - " + task.Desc,
+			EntityLabel: "(Task) " + task.Title,
 			TimeNeeded:  task.TimeToSpend,
 			Priority:    float64(constants.HighPriority-task.Priority) + 0.2*difference,
 		}

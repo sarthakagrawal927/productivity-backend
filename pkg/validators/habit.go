@@ -6,6 +6,7 @@ import (
 	utils "todo/pkg/utils"
 
 	"github.com/labstack/echo/v4"
+	"gorm.io/datatypes"
 )
 
 func CreateHabitValidator(next echo.HandlerFunc) echo.HandlerFunc {
@@ -21,7 +22,11 @@ func CreateHabitValidator(next echo.HandlerFunc) echo.HandlerFunc {
 			return utils.HandleEchoError(c, err)
 		}
 
-		if habit.Target, err = validateInt("target", c.FormValue("target")); err != nil {
+		if habit.LowerLimit, err = validateInt("lower_limit", c.FormValue("lower_limit")); err != nil {
+			return utils.HandleEchoError(c, err)
+		}
+
+		if habit.UpperLimit, err = validateInt("upper_limit", c.FormValue("upper_limit")); err != nil {
 			return utils.HandleEchoError(c, err)
 		}
 
@@ -37,12 +42,43 @@ func CreateHabitValidator(next echo.HandlerFunc) echo.HandlerFunc {
 			return utils.HandleEchoError(c, err)
 		}
 
-		if habit.Anti, err = validateBool("anti", c.FormValue("anti")); err != nil {
+		if habit.Priority, err = validateIntFromArrayFromForm(c, "priority", constants.PriorityTypeList); err != nil {
 			return utils.HandleEchoError(c, err)
 		}
 
-		if habit.ApproxTimeNeeded, err = validateInt("approx_time_needed", c.FormValue("approx_time_needed")); err != nil {
-			return utils.HandleEchoError(c, err)
+		// Handle Category field using constants
+		if habit.Category, err = validateIntFromArrayFromForm(c, "category", constants.HabitCategoryList, constants.HabitCategoryProductivity); err != nil {
+			// Default to Productivity category if not specified
+			habit.Category = constants.HabitCategoryProductivity
+		}
+
+		// Handle PreferredWeekdaysMask as a bitmask
+		weekdaysMask, err := validateInt("preferred_weekdays_mask", c.FormValue("preferred_weekdays_mask"))
+		if err == nil {
+			// Ensure the mask is valid (between 0 and 127 - all 7 days)
+			if weekdaysMask >= 0 && weekdaysMask <= 127 {
+				habit.PreferredWeekdaysMask = uint8(weekdaysMask)
+			}
+		}
+
+		// Handle preferred start time
+		if startTimeStr := c.FormValue("preferred_start_time"); startTimeStr != "" {
+			timeVal, err := validateTime("preferred_start_time", startTimeStr)
+			if err == nil {
+				timeData := datatypes.NewTime(timeVal.Hour(), timeVal.Minute(), timeVal.Second(), 0)
+				habit.PreferredStartTime = &timeData
+			}
+		}
+
+		// Handle preferred month date
+		monthDate, err := validateInt("preferred_month_date", c.FormValue("preferred_month_date"))
+		if err == nil && monthDate > 0 && monthDate <= 31 {
+			habit.PreferredMonthDate = &monthDate
+		}
+
+		approxTimeNeeded, err := validateInt("approx_time_needed", c.FormValue("approx_time_needed"))
+		if err == nil {
+			habit.ApproxTimeNeeded = &approxTimeNeeded
 		}
 
 		habit.UserId = c.Get("user_id").(uint)
@@ -66,15 +102,32 @@ func CreateHabitLogValidator(next echo.HandlerFunc) echo.HandlerFunc {
 			return utils.HandleEchoError(c, err)
 		}
 
-		if habitLog.ResultCount, err = validateInt("count", c.FormValue("count")); err != nil {
+		if habitLog.Count, err = validateInt("count", c.FormValue("count")); err != nil {
 			return utils.HandleEchoError(c, err)
 		}
 
-		if habitLog.ResultDate, err = validateDate("result_date", c.FormValue("result_date")); err != nil {
+		if habitLog.LoggedForDate, err = validateDate("result_date", c.FormValue("result_date")); err != nil {
 			return utils.HandleEchoError(c, err)
 		}
 
-		habitLog.Comment, _ = validateStringFromForm(c, "comment")
+		timeVal, err := validateTime("result_start_time", c.FormValue("result_start_time"))
+		if err != nil {
+			return utils.HandleEchoError(c, err)
+		}
+		// Convert time.Time to datatypes.Time
+		timeData := datatypes.NewTime(timeVal.Hour(), timeVal.Minute(), timeVal.Second(), 0)
+		habitLog.HabitStartTime = &timeData
+
+		// Handle mood rating using constants
+		if habitLog.MoodRating, err = validateIntFromArrayFromForm(c, "mood_rating", constants.MoodRatingList, constants.MoodRatingNeutral); err != nil {
+			// Default to neutral mood if not specified
+			habitLog.MoodRating = constants.MoodRatingNeutral
+		}
+
+		commentValue, _ := validateStringFromForm(c, "comment")
+		if commentValue != "" {
+			habitLog.Comment = &commentValue
+		}
 
 		habitLog.UserId = c.Get("user_id").(uint)
 		c.Set("habit_log", habitLog)

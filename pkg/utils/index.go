@@ -12,6 +12,7 @@ import (
 
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
+	"gorm.io/datatypes"
 	"gorm.io/gorm"
 )
 
@@ -81,8 +82,24 @@ func ConvertToScheduleEntry(timeRange string) (types.ScheduleEntry, error) {
 	}, nil
 }
 
-// todo try to make generic
-func InsertElementsInSliceAfterIdx(slice []types.ScheduleEntry, elements []types.ScheduleEntry, idx int) []types.ScheduleEntry {
+// ConvertToScheduleEntryFromTime converts a datatypes.Time to a ScheduleEntry
+func ConvertToScheduleEntryFromTime(t datatypes.Time) (types.ScheduleEntry, error) {
+	// Extract hours and minutes from the time string representation
+	// datatypes.Time is stored as a string in format "15:04:05"
+	var hour, minute int
+	_, err := fmt.Sscanf(t.String(), "%d:%d:", &hour, &minute)
+	if err != nil {
+		return types.ScheduleEntry{}, err
+	}
+
+	// Create a schedule entry with 1 hour duration
+	timeStr := fmt.Sprintf("%02d:%02d", hour, minute)
+	endTimeStr := fmt.Sprintf("%02d:%02d", (hour+1)%24, minute)
+
+	return ConvertToScheduleEntry(timeStr + "-" + endTimeStr)
+}
+
+func InsertElementsInSliceAfterIdx[T any](slice []T, elements []T, idx int) []T {
 	return append(slice[:idx+1], append(elements, slice[idx+1:]...)...)
 }
 

@@ -4,17 +4,17 @@ var UpdateHabitFromLogs = `
 UPDATE
 	habits
 SET
-	existing_usage = COALESCE(hls.total_result_count, 0)
+	existing_usage = COALESCE(hls.total_count, 0)
 FROM (
 	SELECT
 		hl.habit_id,
-		SUM(hl.result_count) AS total_result_count
+		SUM(hl.count) AS total_count
 	FROM
 		habit_logs hl
 		JOIN habits ON hl.habit_id = habits.id
 	WHERE
 		hl.habit_id = ? AND
-		hl.result_date > CURRENT_DATE - CASE WHEN habits.frequency_type = 1 THEN
+		hl.logged_for_date > CURRENT_DATE - CASE WHEN habits.frequency_type = 1 THEN
 			INTERVAL '1 days'
 		WHEN habits.frequency_type = 2 THEN
 			INTERVAL '7 days'

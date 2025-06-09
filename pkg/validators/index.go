@@ -110,3 +110,17 @@ func validateDate(key, value string) (datatypes.Date, error) {
 		return datatypes.Date(dateTimeVal), nil
 	}
 }
+
+func validateTime(key, value string) (time.Time, error) {
+	var stringTime string
+	var err error
+	if stringTime, err = validateString(key, value); err != nil {
+		return time.Time{}, err
+	}
+
+	timeVal, err := time.Parse("15:04", stringTime)
+	if err != nil {
+		return time.Time{}, err
+	}
+	return timeVal, nil
+}
