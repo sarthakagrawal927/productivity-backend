@@ -56,40 +56,41 @@ func calculateDifferenceInDays(taskDeadline *datatypes.Date) (float64, error) {
 
 func getTaskEntriesFromHabits(Habits []models.Habit) []types.TaskEntry {
 	taskEntries := make([]types.TaskEntry, len(Habits))
-	for i, habit := range Habits {
-		// Calculate target based on lower limit (minimum goal)
-		target := habit.LowerLimit
-		percentageFulfilled := float64(habit.ExistingUsage) / float64(target)
-		priority := float64(habit.Priority) * percentageFulfilled // Use priority field directly
+	return taskEntries
+	// for i, habit := range Habits {
+	// 	// Calculate target based on lower limit (minimum goal)
+	// 	target := habit.LowerLimit
+	// 	percentageFulfilled := float64(habit.ExistingUsage) / float64(target)
+	// 	priority := float64(habit.Priority) * percentageFulfilled // Use priority field directly
 
-		timeNeeded := target - habit.ExistingUsage
+	// 	timeNeeded := target - habit.ExistingUsage
 
-		if habit.Mode == constants.HabitCountMode && habit.ApproxTimeNeeded != nil {
-			timeNeeded = *habit.ApproxTimeNeeded * timeNeeded
-		}
+	// 	if habit.Mode == constants.HabitCountMode && habit.ApproxTimeNeeded != nil {
+	// 		timeNeeded = *habit.ApproxTimeNeeded * timeNeeded
+	// 	}
 
-		if habit.FrequencyType != constants.HabitDailyFreq { // a good aim is to clear any habit tasks in around 5 times itself
-			if !utils.IsWeekendToday() {
-				timeNeeded = timeNeeded / 5
-			}
-			priority = priority + 0.2 // so that urgent tasks & today tasks are given priority
-		}
+	// 	if habit.FrequencyType != constants.HabitDailyFreq { // a good aim is to clear any habit tasks in around 5 times itself
+	// 		if !utils.IsWeekendToday() {
+	// 			timeNeeded = timeNeeded / 5
+	// 		}
+	// 		priority = priority + 0.2 // so that urgent tasks & today tasks are given priority
+	// 	}
 
-		// Add preferred time handling if needed
-		if habit.FrequencyType == constants.HabitDailyFreq && habit.PreferredStartTime != nil {
-			priority -= 0.3 // so that preferred tasks are given priority
-			taskEntries[i].ScheduleEntry, _ = utils.ConvertToScheduleEntryFromTime(*habit.PreferredStartTime)
-		}
+	// 	// Add preferred time handling if needed
+	// 	if habit.FrequencyType == constants.HabitDailyFreq && habit.PreferredStartTime != nil {
+	// 		priority -= 0.3 // so that preferred tasks are given priority
+	// 		taskEntries[i].ScheduleEntry, _ = utils.ConvertToScheduleEntryFromTime(*habit.PreferredStartTime)
+	// 	}
 
-		taskEntries[i] = types.TaskEntry{
-			EntityType:  constants.ENTITY_HABIT,
-			EntityId:    habit.ID,
-			EntityLabel: "(Habit) " + habit.Title,
-			TimeNeeded:  timeNeeded, // consider habit type, mode etc
-			Priority:    priority,   // 0 - 3.3
-		}
+	// 	taskEntries[i] = types.TaskEntry{
+	// 		EntityType:  constants.ENTITY_HABIT,
+	// 		EntityId:    habit.ID,
+	// 		EntityLabel: "(Habit) " + habit.Title,
+	// 		TimeNeeded:  timeNeeded, // consider habit type, mode etc
+	// 		Priority:    priority,   // 0 - 3.3
+	// 	}
 
-	}
+	// }
 	return taskEntries
 }
 

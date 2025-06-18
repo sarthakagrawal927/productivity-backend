@@ -6,8 +6,8 @@ import (
 )
 
 type Meta struct {
-	Title string `json:"title"`
-	Desc  string `json:"desc"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
 }
 
 type Task struct {

@@ -45,7 +45,7 @@ func CreateTaskValidator(next echo.HandlerFunc) echo.HandlerFunc {
 			task.Deadline = &taskDeadline
 		}
 
-		task.Desc = c.FormValue("desc")
+		task.Description = c.FormValue("description")
 		task.UserId = c.Get("user_id").(uint)
 		c.Set("task", task)
 		return next(c)

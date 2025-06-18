@@ -17,7 +17,7 @@ func CreateJournalValidator(next echo.HandlerFunc) echo.HandlerFunc {
 			return utils.HandleEchoError(c, err)
 		}
 
-		if journal.Desc, err = validateStringFromForm(c, "desc"); err != nil {
+		if journal.Description, err = validateStringFromForm(c, "description"); err != nil {
 			return utils.HandleEchoError(c, err)
 		}
 

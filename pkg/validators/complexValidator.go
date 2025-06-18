@@ -17,6 +17,7 @@ const (
 	KIND_BOOL   = "bool"
 	KIND_FLOAT  = "float"
 	KIND_DATE   = "date"
+	KIND_TIME   = "time"
 )
 
 type ValidationRules struct{}
@@ -105,6 +106,11 @@ func handleValidationArray(validationArray ValidationArray, c echo.Context) (map
 
 		case KIND_FLOAT:
 			if tempInterface[validationObj.Field], err = validateFloat(validationObj.Field, value); err != nil && validationObj.Required {
+				return nil, err
+			}
+
+		case KIND_TIME:
+			if tempInterface[validationObj.Field], err = validateTime(validationObj.Field, value); err != nil && validationObj.Required {
 				return nil, err
 			}
 

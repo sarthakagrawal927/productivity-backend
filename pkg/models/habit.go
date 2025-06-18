@@ -6,28 +6,31 @@ import (
 )
 
 type Habit struct {
-	UserId uint `json:"user_id"`
-	Meta
+	UserId      uint   `json:"user_id"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
 
-	FrequencyType    uint  `json:"frequency_type"`               // 1 - Daily, 2 - Weekly, 3 - Monthly
-	UpperLimit       uint  `json:"upper_limit"`                  // Limit in case of anti
-	LowerLimit       uint  `json:"lower_limit"`                  // Limit in case of anti
-	Priority         uint  `json:"priority"`                     // Same as task
-	Mode             uint  `json:"mode"`                         // Counts, Minutes etc.
-	ApproxTimeNeeded *uint `json:"approx_time_needed,omitempty"` // time taken in one instance, needed for count mode to make schedule
-	Status           uint  `json:"status"`                       // 0 - Paused, 1 - Active
-	Category         uint  `json:"category"`                     // 1 - Health, 2 - Finance, 3 - Relationship, 4 - Brain, 5 - Productivity
+	FrequencyType    uint `json:"frequency_type"`               // 1 - Daily, 2 - Weekly, 3 - Monthly
+	UpperLimit       uint `json:"upper_limit,omitempty"`        // Limit in case of anti
+	LowerLimit       uint `json:"lower_limit,omitempty"`        // Limit in case of anti
+	Priority         uint `json:"priority"`                     // Same as task
+	Mode             uint `json:"mode"`                         // Counts, Minutes etc.
+	ApproxTimeNeeded uint `json:"approx_time_needed,omitempty"` // time taken in one instance, needed for count mode to make schedule
+	Status           uint `json:"status"`                       // 0 - Paused, 1 - Active
 
-	UpgradeStatus uint `json:"upgrade_status"`  // 0 - Not Upgradable, 1 - Upgradable, 2 - Upgraded, 3 - Downgraded, 4 - NotAllowed
-	LatestHabitId uint `json:"latest_habit_id"` // to link all prev habits
+	// later
+	// UpgradeStatus uint `json:"upgrade_status"`  // 0 - Not Upgradable, 1 - Upgradable, 2 - Upgraded, 3 - Downgraded, 4 - NotAllowed
+	// LatestHabitId uint `json:"latest_habit_id"` // to link all prev habits
+	// Tags []Tag `json:"tags"`
 
 	Score         uint `json:"score"`
 	ExistingUsage uint `json:"existing_usage"` // based on frequency type update this, to handle multiple logs, insert the log then based on freq update
 
+	// Later, all will probably need to take an array of options, will pick up when re-doing the schedule making
 	// ShouldSchedule     bool     `json:"should_schedule"`
-	PreferredStartTime    *datatypes.Time `json:"preferred_start_time"`
-	PreferredWeekdaysMask uint8           `json:"preferred_weekdays_mask"`
-	PreferredMonthDate    *uint           `json:"preferred_month_date"` // 12th
+	// PreferredStartTime    datatypes.Time `json:"preferred_start_time"`
+	// PreferredWeekdaysMask uint8          `json:"preferred_weekdays_mask"`
+	// PreferredMonthDate    uint           `json:"preferred_month_date"` // 12th
 
 	gorm.Model
 }
@@ -39,10 +42,11 @@ type HabitLog struct {
 	HabitID uint `json:"habit_id"`
 	Count   uint `json:"count"`
 
-	Comment        *string         `json:"comment,omitempty"`
-	HabitStartTime *datatypes.Time `json:"start_time"`
-	LoggedForDate  datatypes.Date  `json:"logged_for_date"`
-	MoodRating     uint            `json:"mood_rating"`
+	Comment       string         `json:"comment,omitempty"`
+	LoggedForDate datatypes.Date `json:"logged_for_date"`
+	MoodRating    uint           `json:"mood_rating"`
+
+	HabitStartTime datatypes.Time `json:"start_time"`
 	// can get end time by just adding count
 	gorm.Model
 }
