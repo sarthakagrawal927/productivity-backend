@@ -10,13 +10,13 @@ type Habit struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
 
-	FrequencyType    uint `json:"frequency_type"`               // 1 - Daily, 2 - Weekly, 3 - Monthly
-	UpperLimit       uint `json:"upper_limit,omitempty"`        // Limit in case of anti
-	LowerLimit       uint `json:"lower_limit,omitempty"`        // Limit in case of anti
-	Priority         uint `json:"priority"`                     // Same as task
-	Mode             uint `json:"mode"`                         // Counts, Minutes etc.
-	ApproxTimeNeeded uint `json:"approx_time_needed,omitempty"` // time taken in one instance, needed for count mode to make schedule
-	Status           uint `json:"status"`                       // 0 - Paused, 1 - Active
+	FrequencyType uint `json:"frequency_type"`        // 1 - Daily, 2 - Weekly, 3 - Monthly
+	UpperLimit    uint `json:"upper_limit,omitempty"` // Limit in case of anti
+	LowerLimit    uint `json:"lower_limit,omitempty"` // Limit in case of anti
+	Priority      uint `json:"priority"`              // Same as task
+	Mode          uint `json:"mode"`                  // Counts, Minutes etc.
+
+	Status uint `json:"status"` // 0 - Paused, 1 - Active
 
 	// later
 	// UpgradeStatus uint `json:"upgrade_status"`  // 0 - Not Upgradable, 1 - Upgradable, 2 - Upgraded, 3 - Downgraded, 4 - NotAllowed
@@ -26,6 +26,8 @@ type Habit struct {
 	Score         uint `json:"score"`
 	ExistingUsage uint `json:"existing_usage"` // based on frequency type update this, to handle multiple logs, insert the log then based on freq update
 
+	// only use count when time is unavailable, otherwise use time, might re-introduce when making schedule
+	// ApproxTimeNeeded uint `json:"approx_time_needed,omitempty"` // time taken in one instance, needed for count mode to make schedule
 	// Later, all will probably need to take an array of options, will pick up when re-doing the schedule making
 	// ShouldSchedule     bool     `json:"should_schedule"`
 	// PreferredStartTime    datatypes.Time `json:"preferred_start_time"`

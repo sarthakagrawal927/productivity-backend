@@ -19,7 +19,6 @@ var ValidationArrayForCreateHabit = ValidationArray{
 	ValidationStruct{Field: "lower_limit", Required: false},
 	ValidationStruct{Field: "priority", Required: false, ShouldBeFrom: constants.PriorityTypeList},
 	ValidationStruct{Field: "mode", Required: false, ShouldBeFrom: constants.HabitModeList},
-	ValidationStruct{Field: "approx_time_needed", Required: false},
 }
 
 // ValidationArrayForCreateHabitLog defines validation rules for logging a habit result
@@ -44,13 +43,12 @@ func CreateHabitValidator(next echo.HandlerFunc) echo.HandlerFunc {
 			Title:       objMap["title"].(string),
 			Description: objMap["description"].(string),
 
-			FrequencyType:    objMap["frequency_type"].(uint),
-			UpperLimit:       objMap["upper_limit"].(uint),
-			LowerLimit:       objMap["lower_limit"].(uint),
-			Priority:         objMap["priority"].(uint),
-			Mode:             objMap["mode"].(uint),
-			ApproxTimeNeeded: objMap["approx_time_needed"].(uint),
-			Status:           constants.HabitActive,
+			FrequencyType: objMap["frequency_type"].(uint),
+			UpperLimit:    objMap["upper_limit"].(uint),
+			LowerLimit:    objMap["lower_limit"].(uint),
+			Priority:      objMap["priority"].(uint),
+			Mode:          objMap["mode"].(uint),
+			Status:        constants.HabitActive,
 		}
 
 		c.Set("habit", habit)

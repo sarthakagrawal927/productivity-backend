@@ -95,6 +95,5 @@ type HabitForCompute struct {
 	FrequencyType    uint `json:"frequency_type"`
 	Target           uint `json:"target"`
 	ExistingUsage    uint `json:"existing_usage"`
-	ApproxTimeNeeded uint `json:"approx_time_needed"`
 }
 ```
