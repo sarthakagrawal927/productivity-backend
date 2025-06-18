@@ -10,11 +10,11 @@ type Habit struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
 
-	FrequencyType uint `json:"frequency_type"`        // 1 - Daily, 2 - Weekly, 3 - Monthly
-	UpperLimit    uint `json:"upper_limit,omitempty"` // Limit in case of anti
-	LowerLimit    uint `json:"lower_limit,omitempty"` // Limit in case of anti
-	Priority      uint `json:"priority"`              // Same as task
-	Mode          uint `json:"mode"`                  // Counts, Minutes etc.
+	FrequencyType uint `json:"frequency_type"` // 1 - Daily, 2 - Weekly, 3 - Monthly
+	UpperLimit    uint `json:"upper_limit"`    // Limit in case of anti
+	LowerLimit    uint `json:"lower_limit"`    // Limit in case of anti
+	Priority      uint `json:"priority"`       // Same as task
+	Mode          uint `json:"mode"`           // Counts, Minutes etc.
 
 	Status uint `json:"status"` // 0 - Paused, 1 - Active
 
@@ -48,7 +48,7 @@ type HabitLog struct {
 	LoggedForDate datatypes.Date `json:"logged_for_date"`
 	MoodRating    uint           `json:"mood_rating"`
 
-	HabitStartTime datatypes.Time `json:"start_time"`
+	// HabitStartTime datatypes.Time `json:"start_time"`
 	// can get end time by just adding count
 	gorm.Model
 }

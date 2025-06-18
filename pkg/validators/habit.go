@@ -25,8 +25,7 @@ var ValidationArrayForCreateHabit = ValidationArray{
 var ValidationArrayForCreateHabitLog = ValidationArray{
 	ValidationStruct{Field: "habit_id", Kind: KIND_INT, Required: true},
 	ValidationStruct{Field: "count", Kind: KIND_INT, Required: true},
-	ValidationStruct{Field: "result_date", Kind: KIND_DATE, Required: true},
-	ValidationStruct{Field: "result_start_time", Kind: KIND_TIME, Required: true},
+	ValidationStruct{Field: "logged_for_date", Kind: KIND_DATE, Required: true},
 	ValidationStruct{Field: "mood_rating", Kind: KIND_INT, Required: false, ShouldBeFrom: constants.MoodRatingList, Default: constants.MoodRatingNeutral},
 	ValidationStruct{Field: "comment", Kind: KIND_STRING, Required: false},
 }
@@ -64,13 +63,12 @@ func CreateHabitLogValidator(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 
 		habitLog := models.HabitLog{
-			UserId:         c.Get("user_id").(uint),
-			HabitID:        objMap["habit_id"].(uint),
-			Count:          objMap["count"].(uint),
-			LoggedForDate:  objMap["result_date"].(datatypes.Date),
-			MoodRating:     objMap["mood_rating"].(uint),
-			Comment:        objMap["comment"].(string),
-			HabitStartTime: objMap["result_start_time"].(datatypes.Time),
+			UserId:        c.Get("user_id").(uint),
+			HabitID:       objMap["habit_id"].(uint),
+			Count:         objMap["count"].(uint),
+			LoggedForDate: objMap["logged_for_date"].(datatypes.Date),
+			MoodRating:    objMap["mood_rating"].(uint),
+			Comment:       objMap["comment"].(string),
 		}
 
 		c.Set("habit_log", habitLog)
