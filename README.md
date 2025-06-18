@@ -4,6 +4,8 @@
 
 ## Notes
 
+- Writing validation library on my own was bad idea, setting up db migrations should have been done first.
+
 - Gorm adds deletedAt column in each table, and it always soft deletes. That's why there are no delete status in the models. Though it is to promote soft delete I feel having extra column can be avoided if I already have a status column in most tables which can be purposed into delete. Will do that after the project is in reasonable shape.
 
 - Decided to maintain habit streak status in habit itself. Because if not done that, it results in complex query like:

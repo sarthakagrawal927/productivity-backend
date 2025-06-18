@@ -14,12 +14,12 @@ var ValidationArrayForCreateHabit = ValidationArray{
 	ValidationStruct{Field: "title", Kind: KIND_STRING, Required: true},
 	ValidationStruct{Field: "description", Kind: KIND_STRING, Required: false},
 
-	ValidationStruct{Field: "frequency_type", Kind: KIND_INT, Required: true, ShouldBeFrom: constants.HabitFreqTypeList},
-	ValidationStruct{Field: "upper_limit", Kind: KIND_INT, Required: false},
-	ValidationStruct{Field: "lower_limit", Kind: KIND_INT, Required: false},
-	ValidationStruct{Field: "priority", Kind: KIND_INT, Required: false, ShouldBeFrom: constants.PriorityTypeList},
-	ValidationStruct{Field: "mode", Kind: KIND_INT, Required: false, ShouldBeFrom: constants.HabitModeList},
-	ValidationStruct{Field: "approx_time_needed", Kind: KIND_INT, Required: false},
+	ValidationStruct{Field: "frequency_type", Required: true, ShouldBeFrom: constants.HabitFreqTypeList},
+	ValidationStruct{Field: "upper_limit", Required: false},
+	ValidationStruct{Field: "lower_limit", Required: false},
+	ValidationStruct{Field: "priority", Required: false, ShouldBeFrom: constants.PriorityTypeList},
+	ValidationStruct{Field: "mode", Required: false, ShouldBeFrom: constants.HabitModeList},
+	ValidationStruct{Field: "approx_time_needed", Required: false},
 }
 
 // ValidationArrayForCreateHabitLog defines validation rules for logging a habit result

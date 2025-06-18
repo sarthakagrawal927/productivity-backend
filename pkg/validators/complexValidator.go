@@ -38,7 +38,7 @@ var defaultValidationObj = ValidationStruct{
 	Kind:         KIND_INT,
 	Required:     false,
 	ShouldBeFrom: []uint{},
-	Default:      0,
+	Default:      uint(0),
 }
 
 func getSingleValidationObj(initialObj ValidationStruct) ValidationStruct {
@@ -47,6 +47,9 @@ func getSingleValidationObj(initialObj ValidationStruct) ValidationStruct {
 	}
 	if initialObj.Kind == "" {
 		initialObj.Kind = defaultValidationObj.Kind
+	}
+	if initialObj.Default == nil {
+		initialObj.Default = defaultValidationObj.Default
 	}
 	// bool is default false
 	// default values for interface are also fine
